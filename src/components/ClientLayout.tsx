@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ScrollToTop from '@/components/ScrollToTop'
@@ -8,11 +8,10 @@ import WhatsAppButton from '@/components/WhatsAppButton'
 import CartDrawer from '@/components/CartDrawer'
 import SearchOverlay from '@/components/SearchOverlay'
 import { Toaster } from '@/components/ui/toaster'
-import { useCart } from '@/hooks/use-cart'
+import { CartProvider, useCart } from '@/hooks/use-cart'
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+function InnerLayout({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false)
-
   const cart = useCart()
 
   useEffect(() => {
@@ -51,5 +50,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <WhatsAppButton isCartOpen={cart.isOpen} />
       <Toaster />
     </div>
+  )
+}
+
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <CartProvider>
+      <InnerLayout>{children}</InnerLayout>
+    </CartProvider>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 
 export interface CartItem {
   id: string
@@ -20,6 +20,22 @@ interface CartState {
   isOpen: boolean
 }
 
+interface CartContextType {
+  items: CartItem[]
+  isOpen: boolean
+  subtotal: number
+  totalItems: number
+  addItem: (item: CartItem) => void
+  removeItem: (id: string, size?: string, spiceLevel?: string) => void
+  updateQuantity: (id: string, size: string | undefined, spiceLevel: string | undefined, quantity: number) => void
+  toggleCart: () => void
+  openCart: () => void
+  closeCart: () => void
+  clearCart: () => void
+}
+
+const CartContext = createContext<CartContextType | null>(null)
+
 const CART_KEY = 'food-express-cart'
 
 function loadCart(): CartItem[] {
@@ -37,7 +53,7 @@ function saveCart(items: CartItem[]) {
   localStorage.setItem(CART_KEY, JSON.stringify(items))
 }
 
-export function useCart() {
+export function CartProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<CartState>({
     items: [],
     isOpen: false,
@@ -127,17 +143,31 @@ export function useCart() {
 
   const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0)
 
-  return {
-    items: state.items,
-    isOpen: state.isOpen,
-    subtotal,
-    totalItems,
-    addItem,
-    removeItem,
-    updateQuantity,
-    toggleCart,
-    openCart,
-    closeCart,
-    clearCart,
+  return (
+    <CartContext.Provider
+      value={{
+        items: state.items,
+        isOpen: state.isOpen,
+        subtotal,
+        totalItems,
+        addItem,
+        removeItem,
+        updateQuantity,
+        toggleCart,
+        openCart,
+        closeCart,
+        clearCart,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  )
+}
+
+export function useCart() {
+  const context = useContext(CartContext)
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider')
   }
+  return context
 }

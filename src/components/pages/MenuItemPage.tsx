@@ -341,7 +341,7 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
             </div>
 
             {/* Quantity & Add to Order */}
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
               <div className="flex items-center border border-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -361,7 +361,7 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
               </div>
 
               <Button
-                className={`flex-1 font-semibold text-base py-6 transition-all duration-300 ${
+                className={`flex-1 font-semibold text-sm sm:text-base py-4 sm:py-5 transition-all duration-300 truncate ${
                   added
                     ? 'bg-green-600 text-white'
                     : 'bg-fire-gradient text-primary-foreground btn-fire-glow'
@@ -369,14 +369,14 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
                 onClick={handleAddToOrder}
               >
                 {added ? (
-                  <>
+                  <span className="flex items-center justify-center gap-1.5">
                     ✓ Added to Order!
-                  </>
+                  </span>
                 ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5 mr-2" />
-                    Add to Order - {formatPrice(totalPrice)}
-                  </>
+                  <span className="flex items-center justify-center gap-1.5">
+                    <ShoppingCart className="w-4 h-4 flex-shrink-0" />
+                    <span className="truncate">Add to Order · {formatPrice(totalPrice)}</span>
+                  </span>
                 )}
               </Button>
             </div>

@@ -13,7 +13,7 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-const siteUrl = "https://foodexpress.vercel.app";
+const siteUrl = "https://foodexpresslalkurti.vercel.app";
 
 export const metadata: Metadata = {
   title: {
