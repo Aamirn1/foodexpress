@@ -7,15 +7,11 @@ import ScrollToTop from '@/components/ScrollToTop'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import CartDrawer from '@/components/CartDrawer'
 import SearchOverlay from '@/components/SearchOverlay'
-import CartNotification from '@/components/CartNotification'
+import { Toaster } from '@/components/ui/toaster'
 import { useCart } from '@/hooks/use-cart'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false)
-  const [cartNotification, setCartNotification] = useState({
-    visible: false,
-    itemName: '',
-  })
 
   const cart = useCart()
 
@@ -28,14 +24,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
-
-  const showCartNotification = useCallback((itemName: string) => {
-    setCartNotification({ visible: true, itemName })
-  }, [])
-
-  const hideCartNotification = useCallback(() => {
-    setCartNotification((prev) => ({ ...prev, visible: false }))
   }, [])
 
   return (
@@ -61,11 +49,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <ScrollToTop />
       <WhatsAppButton isCartOpen={cart.isOpen} />
-      <CartNotification
-        itemName={cartNotification.itemName}
-        visible={cartNotification.visible}
-        onClose={hideCartNotification}
-      />
+      <Toaster />
     </div>
   )
 }

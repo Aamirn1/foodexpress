@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Star, Plus, Search, ChevronRight, Home, Flame } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -13,16 +14,15 @@ import {
   type MenuItem,
 } from '@/data/menu'
 import { useCart } from '@/hooks/use-cart'
+import { useToast } from '@/hooks/use-toast'
 
-interface MenuPageProps {
-  onItemClick?: (id: string) => void
-}
-
-export default function MenuPage({ onItemClick }: MenuPageProps) {
+export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState('all')
   const [activePriceRange, setActivePriceRange] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const { addItem } = useCart()
+  const router = useRouter()
+  const { toast } = useToast()
 
   const filteredItems = useMemo(() => {
     let items = menuItems
@@ -52,7 +52,8 @@ export default function MenuPage({ onItemClick }: MenuPageProps) {
     return items
   }, [activeCategory, activePriceRange, searchQuery])
 
-  const handleAddToOrder = (item: MenuItem) => {
+  const handleAddToOrder = (e: React.MouseEvent, item: MenuItem) => {
+    e.stopPropagation()
     addItem({
       id: item.id,
       name: item.name,
@@ -60,6 +61,14 @@ export default function MenuPage({ onItemClick }: MenuPageProps) {
       image: item.images[0] || '/images/product-classic-burger.png',
       quantity: 1,
     })
+    toast({
+      title: 'Added to Order!',
+      description: `${item.name} has been added to your order.`,
+    })
+  }
+
+  const handleItemClick = (itemId: string) => {
+    router.push(`/menu/${itemId}`)
   }
 
   const container = {
@@ -80,7 +89,10 @@ export default function MenuPage({ onItemClick }: MenuPageProps) {
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-          <button className="hover:text-primary transition-colors flex items-center gap-1">
+          <button
+            onClick={() => router.push('/')}
+            className="hover:text-primary transition-colors flex items-center gap-1"
+          >
             <Home className="w-3.5 h-3.5" />
             Home
           </button>
@@ -213,7 +225,7 @@ export default function MenuPage({ onItemClick }: MenuPageProps) {
                 key={menuItem.id}
                 variants={item}
                 className="card-glow group bg-card rounded-xl border border-border overflow-hidden cursor-pointer"
-                onClick={() => onItemClick?.(menuItem.id)}
+                onClick={() => handleItemClick(menuItem.id)}
               >
                 {/* Image */}
                 <div className="relative aspect-square overflow-hidden">
@@ -227,6 +239,12 @@ export default function MenuPage({ onItemClick }: MenuPageProps) {
                       {menuItem.tag}
                     </Badge>
                   )}
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-background/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <span className="px-4 py-2 rounded-lg bg-fire-gradient text-primary-foreground font-semibold text-sm shadow-lg">
+                      View Details
+                    </span>
+                  </div>
                 </div>
 
                 {/* Content */}
@@ -255,10 +273,7 @@ export default function MenuPage({ onItemClick }: MenuPageProps) {
                     <Button
                       size="sm"
                       className="bg-fire-gradient text-primary-foreground btn-fire-glow"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleAddToOrder(menuItem)
-                      }}
+                      onClick={(e) => handleAddToOrder(e, menuItem)}
                     >
                       <Plus className="w-4 h-4 mr-1" />
                       Add

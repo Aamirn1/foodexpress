@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-const typewriterWords = ['Fire', 'Flavor', 'Passion', 'Excellence']
+const typewriterWords = ['Fire', 'Flavor', 'Passion', 'Excellence', 'Perfection']
 
 function TypewriterText() {
   const [wordIndex, setWordIndex] = useState(0)
@@ -19,28 +19,48 @@ function TypewriterText() {
 
     if (!isDeleting && charIndex < currentWord.length) {
       // Typing
-      timeout = setTimeout(() => setCharIndex((c) => c + 1), 100)
+      timeout = setTimeout(() => setCharIndex((c) => c + 1), 120)
     } else if (!isDeleting && charIndex === currentWord.length) {
-      // Pause at end of word
-      timeout = setTimeout(() => setIsDeleting(true), 2000)
+      // Pause at end of word, then start deleting
+      timeout = setTimeout(() => setIsDeleting(true), 2200)
     } else if (isDeleting && charIndex > 0) {
       // Deleting
-      timeout = setTimeout(() => setCharIndex((c) => c - 1), 60)
+      timeout = setTimeout(() => setCharIndex((c) => c - 1), 70)
     } else if (isDeleting && charIndex === 0) {
-      // Move to next word
-      setIsDeleting(false)
-      setWordIndex((prev) => (prev + 1) % typewriterWords.length)
+      // Move to next word - use setTimeout to avoid synchronous setState in effect
+      timeout = setTimeout(() => {
+        setIsDeleting(false)
+        setWordIndex((prev) => (prev + 1) % typewriterWords.length)
+      }, 50)
     }
 
     return () => clearTimeout(timeout)
   }, [charIndex, isDeleting, wordIndex])
 
-  const displayText = typewriterWords[wordIndex].slice(0, charIndex)
+  const currentWord = typewriterWords[wordIndex]
+  const displayText = currentWord.slice(0, charIndex)
 
   return (
-    <span className="text-fire-gradient mt-2 inline-flex">
-      {displayText}
-      <span className="animate-pulse text-primary ml-0.5">|</span>
+    <span className="relative inline-flex items-center">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={wordIndex}
+          className="text-fire-gradient"
+          initial={{ opacity: 0.7 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {displayText}
+        </motion.span>
+      </AnimatePresence>
+      <motion.span
+        className="text-primary ml-0.5 inline-block"
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
+      >
+        |
+      </motion.span>
     </span>
   )
 }
@@ -55,6 +75,30 @@ export default function HeroSection() {
       />
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+      {/* Fire particles overlay */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 rounded-full bg-primary/40"
+            style={{
+              left: `${15 + i * 15}%`,
+              bottom: '10%',
+            }}
+            animate={{
+              y: [0, -200, -400],
+              opacity: [0, 0.8, 0],
+              scale: [0.5, 1, 0.3],
+            }}
+            transition={{
+              duration: 3 + i * 0.5,
+              repeat: Infinity,
+              delay: i * 0.7,
+              ease: 'easeOut',
+            }}
+          />
+        ))}
+      </div>
       {/* Fire gradient accent at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-fire-gradient" />
 
@@ -77,7 +121,9 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <span className="block text-foreground">Where Flavor Meets</span>
-          <TypewriterText />
+          <div className="mt-2 min-h-[1.2em] flex items-center justify-center">
+            <TypewriterText />
+          </div>
         </motion.h1>
 
         <motion.p

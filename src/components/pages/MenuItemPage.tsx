@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   Star,
@@ -14,15 +15,16 @@ import {
   ShieldCheck,
   Leaf,
   ShoppingCart,
+  ArrowLeft,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { getMenuItemById, getRelatedItems } from '@/data/menu'
 import { useCart } from '@/hooks/use-cart'
+import { useToast } from '@/hooks/use-toast'
 
 interface MenuItemPageProps {
   id: string
-  onNavigate?: (page: string, param?: string) => void
 }
 
 const sizeOptions = [
@@ -40,15 +42,18 @@ const addonOptions = [
   { label: 'Avocado', extra: 150 },
 ]
 
-export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
+export default function MenuItemPage({ id }: MenuItemPageProps) {
   const menuItem = getMenuItemById(id)
   const relatedItems = getRelatedItems(id)
-  const { addItem } = useCart()
+  const { addItem, openCart } = useCart()
+  const router = useRouter()
+  const { toast } = useToast()
 
   const [selectedSize, setSelectedSize] = useState(0)
   const [selectedSpice, setSelectedSpice] = useState(2)
   const [selectedAddons, setSelectedAddons] = useState<number[]>([])
   const [quantity, setQuantity] = useState(1)
+  const [added, setAdded] = useState(false)
 
   const extraCharges = useMemo(() => {
     let extra = sizeOptions[selectedSize].extra
@@ -83,6 +88,12 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
       addons: selectedAddons.map((i) => addonOptions[i].label),
       extraCharges,
     })
+    setAdded(true)
+    toast({
+      title: 'Added to Order! 🔥',
+      description: `${quantity}x ${menuItem.name} ${sizeOptions[selectedSize].label !== 'Regular' ? `(${sizeOptions[selectedSize].label})` : ''} has been added to your order.`,
+    })
+    setTimeout(() => setAdded(false), 2000)
   }
 
   if (!menuItem) {
@@ -93,7 +104,14 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
           <h2 className="text-2xl font-serif font-bold text-foreground mb-2">
             Item Not Found
           </h2>
-          <p className="text-muted-foreground">This menu item does not exist.</p>
+          <p className="text-muted-foreground mb-6">This menu item does not exist.</p>
+          <Button
+            onClick={() => router.push('/menu')}
+            className="bg-fire-gradient text-primary-foreground"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Menu
+          </Button>
         </div>
       </div>
     )
@@ -113,7 +131,7 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-4">
         <nav className="flex items-center gap-2 text-sm text-muted-foreground">
           <button
-            onClick={() => onNavigate?.('home')}
+            onClick={() => router.push('/')}
             className="hover:text-primary transition-colors flex items-center gap-1"
           >
             <Home className="w-3.5 h-3.5" />
@@ -121,7 +139,7 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
           </button>
           <ChevronRight className="w-3.5 h-3.5" />
           <button
-            onClick={() => onNavigate?.('menu')}
+            onClick={() => router.push('/menu')}
             className="hover:text-primary transition-colors"
           >
             Menu
@@ -129,6 +147,18 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
           <ChevronRight className="w-3.5 h-3.5" />
           <span className="text-foreground font-medium">{menuItem.name}</span>
         </nav>
+      </div>
+
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+        <Button
+          variant="ghost"
+          onClick={() => router.push('/menu')}
+          className="text-muted-foreground hover:text-foreground -ml-2"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" />
+          Back to Menu
+        </Button>
       </div>
 
       {/* Main Content */}
@@ -275,7 +305,7 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
                     onClick={() => setSelectedSpice(idx)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
                       selectedSpice === idx
-                        ? 'bg-primary/20 text-primary border-primary/50'
+                        ? spiceColorMap[spice]
                         : 'bg-card text-muted-foreground border-border hover:border-primary/30'
                     }`}
                   >
@@ -331,13 +361,43 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
               </div>
 
               <Button
-                className="flex-1 bg-fire-gradient text-primary-foreground btn-fire-glow font-semibold text-base py-6"
+                className={`flex-1 font-semibold text-base py-6 transition-all duration-300 ${
+                  added
+                    ? 'bg-green-600 text-white'
+                    : 'bg-fire-gradient text-primary-foreground btn-fire-glow'
+                }`}
                 onClick={handleAddToOrder}
               >
-                <ShoppingCart className="w-5 h-5 mr-2" />
-                Add to Order - {formatPrice(totalPrice)}
+                {added ? (
+                  <>
+                    ✓ Added to Order!
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Add to Order - {formatPrice(totalPrice)}
+                  </>
+                )}
               </Button>
             </div>
+
+            {/* After adding - View Cart */}
+            {added && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6"
+              >
+                <Button
+                  variant="outline"
+                  className="w-full border-primary/50 text-primary hover:bg-primary/10 font-semibold py-5"
+                  onClick={openCart}
+                >
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  View Your Order
+                </Button>
+              </motion.div>
+            )}
 
             {/* Trust Signals */}
             <div className="grid grid-cols-3 gap-3">
@@ -380,7 +440,7 @@ export default function MenuItemPage({ id, onNavigate }: MenuItemPageProps) {
                   key={relItem.id}
                   className="card-glow bg-card rounded-xl border border-border overflow-hidden cursor-pointer group"
                   onClick={() => {
-                    onNavigate?.('menu-item', relItem.id)
+                    router.push(`/menu/${relItem.id}`)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
                 >

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Phone, Menu, Flame, Search, ShoppingCart, X } from 'lucide-react'
+import { Flame, Search, ShoppingCart, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const navLinks = [
@@ -36,8 +36,12 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
   }, [])
 
   // Close mobile menu on route change
+  const prevPathname = useRef(pathname)
   useEffect(() => {
-    setMobileOpen(false)
+    if (prevPathname.current !== pathname) {
+      prevPathname.current = pathname
+      setMobileOpen(false)
+    }
   }, [pathname])
 
   // Prevent body scroll when mobile menu is open
@@ -114,14 +118,6 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
               </kbd>
             </button>
 
-            <a
-              href="tel:+923205719979"
-              className="hidden xl:flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors text-sm"
-            >
-              <Phone className="w-4 h-4" />
-              <span>+92 320 5719979</span>
-            </a>
-
             {/* Cart Button */}
             <button
               onClick={onCartOpen}
@@ -150,7 +146,7 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
             </Link>
           </div>
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Buttons */}
           <div className="flex md:hidden items-center gap-2">
             {/* Mobile Search */}
             <Button
@@ -177,16 +173,16 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
               )}
             </button>
 
-            {/* Hamburger Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground"
+            {/* Hamburger Button - Fire themed */}
+            <button
+              className="relative w-9 h-9 flex flex-col items-center justify-center gap-[5px] rounded-lg bg-secondary/60 border border-border/50 hover:border-primary/40 transition-all group"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
-              <Menu className="w-6 h-6" />
-            </Button>
+              <span className="w-5 h-[2px] bg-fire-gradient rounded-full transition-all group-hover:w-5" />
+              <span className="w-4 h-[2px] bg-fire-gradient rounded-full transition-all group-hover:w-5" />
+              <span className="w-3 h-[2px] bg-fire-gradient rounded-full transition-all group-hover:w-5" />
+            </button>
           </div>
         </div>
       </div>
@@ -197,7 +193,7 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
           <>
             {/* Backdrop */}
             <motion.div
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -207,44 +203,48 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
 
             {/* Drawer */}
             <motion.div
-              className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-[70] flex flex-col"
+              className="fixed top-0 right-0 bottom-0 w-[300px] bg-background border-l border-border z-[70] flex flex-col"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
             >
-              {/* Drawer Header */}
-              <div className="flex items-center justify-between p-4 border-b border-border">
-                <Link href="/" className="text-fire-gradient font-serif font-black text-lg" onClick={() => setMobileOpen(false)}>
-                  FOOD EXPRESS
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-foreground h-8 w-8"
-                  onClick={() => setMobileOpen(false)}
-                  aria-label="Close menu"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+              {/* Drawer Header with Fire gradient accent */}
+              <div className="relative">
+                <div className="absolute inset-x-0 top-0 h-1 bg-fire-gradient" />
+                <div className="flex items-center justify-between p-5 border-b border-border">
+                  <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
+                    <Flame className="w-6 h-6 text-primary" />
+                    <span className="text-fire-gradient font-serif font-black text-lg">
+                      FOOD EXPRESS
+                    </span>
+                  </Link>
+                  <button
+                    className="w-8 h-8 rounded-full bg-secondary/80 border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+                    onClick={() => setMobileOpen(false)}
+                    aria-label="Close menu"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Navigation Links */}
-              <nav className="flex-1 overflow-y-auto py-4">
+              <nav className="flex-1 overflow-y-auto py-3">
                 {navLinks.map((link, i) => (
                   <motion.div
                     key={link.href}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
+                    transition={{ delay: i * 0.05, duration: 0.3 }}
                   >
                     <Link
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
-                      className={`flex items-center text-lg font-medium py-3 px-5 transition-colors ${
+                      className={`flex items-center text-base font-medium py-3.5 px-5 transition-all ${
                         isActive(link.href)
                           ? 'text-primary bg-primary/10 border-r-2 border-primary'
-                          : 'text-foreground/80 hover:text-primary hover:bg-secondary/50'
+                          : 'text-foreground/80 hover:text-primary hover:bg-primary/5'
                       }`}
                     >
                       {link.label}
@@ -254,14 +254,18 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
               </nav>
 
               {/* Drawer Footer */}
-              <div className="p-4 border-t border-border">
-                <Link href="/menu" onClick={() => setMobileOpen(false)}>
+              <div className="p-5 border-t border-border space-y-3">
+                <Link href="/menu" onClick={() => setMobileOpen(false)} className="block">
                   <Button
-                    className="bg-fire-gradient text-primary-foreground font-semibold w-full"
+                    className="bg-fire-gradient text-primary-foreground font-semibold w-full btn-fire-glow py-5"
                   >
+                    <Flame className="w-4 h-4 mr-2" />
                     Order Now
                   </Button>
                 </Link>
+                <p className="text-center text-xs text-muted-foreground">
+                  Open 7 Days • 10AM - 11PM
+                </p>
               </div>
             </motion.div>
           </>

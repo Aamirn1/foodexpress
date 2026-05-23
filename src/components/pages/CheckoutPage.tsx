@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useRouter } from 'next/navigation'
 import { useCart } from '@/hooks/use-cart'
 
 interface CheckoutPageProps {
@@ -32,6 +33,7 @@ const steps = [
 
 export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const { items, subtotal, totalItems, updateQuantity, removeItem, clearCart } = useCart()
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlacing, setIsPlacing] = useState(false)
   const [orderPlaced, setOrderPlaced] = useState(false)
@@ -102,7 +104,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
           </p>
           <Button
             className="bg-fire-gradient text-primary-foreground btn-fire-glow"
-            onClick={() => onNavigate?.('menu')}
+            onClick={() => router.push('/menu')}
           >
             Browse Menu
           </Button>
@@ -133,7 +135,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
           </p>
           <Button
             className="bg-fire-gradient text-primary-foreground btn-fire-glow"
-            onClick={() => onNavigate?.('home')}
+            onClick={() => router.push('/')}
           >
             Back to Home
           </Button>

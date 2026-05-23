@@ -3,9 +3,12 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Star, Eye } from 'lucide-react'
+import { Star, Eye, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { useCart } from '@/hooks/use-cart'
+import { useToast } from '@/hooks/use-toast'
+import { menuItems } from '@/data/menu'
 
 interface Product {
   id: number
@@ -85,6 +88,26 @@ interface PopularItemsProps {
 }
 
 export default function PopularItems({ onViewProduct }: PopularItemsProps) {
+  const { addItem } = useCart()
+  const { toast } = useToast()
+
+  const handleQuickAdd = (e: React.MouseEvent, product: Product) => {
+    e.stopPropagation()
+    e.preventDefault()
+    const menuItem = menuItems.find((m) => m.id === product.slug)
+    addItem({
+      id: product.slug,
+      name: product.name,
+      price: Math.round(product.price * 100),
+      image: product.image,
+      quantity: 1,
+    })
+    toast({
+      title: 'Added to Order! 🔥',
+      description: `${product.name} has been added to your order.`,
+    })
+  }
+
   return (
     <section className="py-16 md:py-24 bg-secondary/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -116,71 +139,82 @@ export default function PopularItems({ onViewProduct }: PopularItemsProps) {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <div className="card-glow rounded-xl border border-border bg-card overflow-hidden transition-all duration-300">
-                {/* Image */}
-                <div className="relative aspect-square overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                  {/* Hover overlay with View in 3D and View Details */}
-                  <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
-                    <Button
-                      className="bg-fire-gradient text-primary-foreground font-semibold btn-fire-glow"
-                      onClick={() => onViewProduct(product)}
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      View in 3D
-                    </Button>
+              <Link href={`/menu/${product.slug}`}>
+                <div className="card-glow rounded-xl border border-border bg-card overflow-hidden transition-all duration-300 cursor-pointer">
+                  {/* Image */}
+                  <div className="relative aspect-square overflow-hidden">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    {/* Hover overlay with View in 3D and Quick Add */}
+                    <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                      <Button
+                        className="bg-fire-gradient text-primary-foreground font-semibold btn-fire-glow"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          onViewProduct(product)
+                        }}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        View in 3D
+                      </Button>
+                      <Button
+                        className="bg-card/90 text-foreground border border-border font-semibold hover:bg-card"
+                        onClick={(e) => handleQuickAdd(e, product)}
+                      >
+                        <Plus className="w-4 h-4 mr-1" />
+                        Add
+                      </Button>
+                    </div>
+                    {/* Tag */}
+                    {product.tag && (
+                      <Badge className="absolute top-3 left-3 bg-fire-gradient text-primary-foreground border-0 font-semibold">
+                        {product.tag}
+                      </Badge>
+                    )}
                   </div>
-                  {/* Tag */}
-                  {product.tag && (
-                    <Badge className="absolute top-3 left-3 bg-fire-gradient text-primary-foreground border-0 font-semibold">
-                      {product.tag}
-                    </Badge>
-                  )}
-                </div>
 
-                {/* Content */}
-                <div className="p-4 md:p-5">
-                  <div className="flex items-center justify-between mb-2">
-                    <Link href={`/menu/${product.slug}`} className="font-serif text-lg font-bold text-foreground group-hover:text-fire-gradient transition-colors hover:underline underline-offset-2">
-                      {product.name}
-                    </Link>
-                    <span className="text-fire-gradient font-black text-lg">
-                      ${product.price.toFixed(2)}
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
-                    {product.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: 5 }).map((_, idx) => (
-                        <Star
-                          key={idx}
-                          className={`w-4 h-4 ${
-                            idx < Math.floor(product.rating)
-                              ? 'text-accent fill-accent'
-                              : 'text-muted-foreground/30'
-                          }`}
-                        />
-                      ))}
-                      <span className="text-muted-foreground text-sm ml-1">
-                        {product.rating}
+                  {/* Content */}
+                  <div className="p-4 md:p-5">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-serif text-lg font-bold text-foreground group-hover:text-primary transition-colors">
+                        {product.name}
+                      </span>
+                      <span className="text-fire-gradient font-black text-lg">
+                        ${product.price.toFixed(2)}
                       </span>
                     </div>
-                    <Link href={`/menu/${product.slug}`}>
-                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
-                        View Details
-                      </Button>
-                    </Link>
+                    <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
+                      {product.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: 5 }).map((_, idx) => (
+                          <Star
+                            key={idx}
+                            className={`w-4 h-4 ${
+                              idx < Math.floor(product.rating)
+                                ? 'text-accent fill-accent'
+                                : 'text-muted-foreground/30'
+                            }`}
+                          />
+                        ))}
+                        <span className="text-muted-foreground text-sm ml-1">
+                          {product.rating}
+                        </span>
+                      </div>
+                      <span className="text-primary text-sm font-medium group-hover:underline underline-offset-2">
+                        View Details →
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
