@@ -325,14 +325,14 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
                   <button
                     key={addon.label}
                     onClick={() => toggleAddon(idx)}
-                    className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all border ${
+                    className={`flex items-center justify-between px-3 sm:px-4 py-3 rounded-lg text-xs sm:text-sm font-medium transition-all border whitespace-nowrap ${
                       selectedAddons.includes(idx)
                         ? 'bg-primary/20 text-primary border-primary/50'
                         : 'bg-card text-muted-foreground border-border hover:border-primary/30'
                     }`}
                   >
-                    <span>{addon.label}</span>
-                    <span className="text-xs opacity-70">
+                    <span className="truncate">{addon.label}</span>
+                    <span className="text-xs opacity-70 ml-2 flex-shrink-0">
                       +{formatPrice(addon.extra)}
                     </span>
                   </button>
@@ -345,7 +345,7 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
               <div className="flex items-center border border-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex-1 flex items-center justify-start"
+                  className="pl-4 pr-2 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex items-center justify-center sm:flex-1 sm:justify-start"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -354,7 +354,7 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex-1 flex items-center justify-end"
+                  className="pr-4 pl-2 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex items-center justify-center sm:flex-1 sm:justify-end"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
