@@ -325,14 +325,14 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
                   <button
                     key={addon.label}
                     onClick={() => toggleAddon(idx)}
-                    className={`flex flex-row flex-nowrap items-center justify-between gap-2 px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg text-xs sm:text-sm font-medium transition-all border overflow-hidden ${
+                    className={`flex justify-between items-center w-full px-4 py-3 rounded-lg text-sm font-medium transition-all border ${
                       selectedAddons.includes(idx)
                         ? 'bg-primary/20 text-primary border-primary/50'
                         : 'bg-card text-muted-foreground border-border hover:border-primary/30'
                     }`}
                   >
-                    <span className="whitespace-nowrap truncate min-w-0">{addon.label}</span>
-                    <span className="whitespace-nowrap text-xs opacity-70 flex-shrink-0">
+                    <span className="whitespace-nowrap">{addon.label}</span>
+                    <span className="whitespace-nowrap text-xs opacity-70">
                       +{formatPrice(addon.extra)}
                     </span>
                   </button>
@@ -342,19 +342,19 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
 
             {/* Quantity & Add to Order */}
             <div className="flex flex-col gap-3 mb-6">
-              <div className="grid grid-cols-[40px_1fr_40px] sm:flex sm:items-center border border-border rounded-lg overflow-hidden">
+              <div className="flex justify-between items-center w-full px-4 border border-border rounded-lg">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="flex items-center justify-center py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  className="py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="flex items-center justify-center py-3 text-foreground font-bold text-lg">
+                <span className="py-3 text-foreground font-bold text-lg">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="flex items-center justify-center py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  className="py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
