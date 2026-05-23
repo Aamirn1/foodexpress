@@ -61,7 +61,7 @@ export default function SpecialsSection() {
               <div className="absolute -inset-4 bg-fire-gradient rounded-2xl opacity-20 blur-2xl" />
               <div className="relative overflow-hidden rounded-2xl border border-border">
                 <Image
-                  src="/images/product-spicy-burger.png"
+                  src="/images/product-double-smash-burger.png"
                   alt="Double Smash Burger"
                   fill
                   className="object-cover"

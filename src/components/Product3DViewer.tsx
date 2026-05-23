@@ -220,7 +220,7 @@ export default function Product3DViewer({ product, onClose }: Product3DViewerPro
 
               <div className="mt-6">
                 <span className="text-4xl font-black text-fire-gradient">
-                  ${product.price.toFixed(2)}
+                  Rs. {product.price.toLocaleString()}
                 </span>
               </div>
 

@@ -26,7 +26,7 @@ const products: Product[] = [
     id: 1,
     slug: 'classic-burger',
     name: 'Classic Smash Burger',
-    price: 8.99,
+    price: 850,
     image: '/images/product-classic-burger.png',
     rating: 4.9,
     tag: "Chef's Special",
@@ -36,7 +36,7 @@ const products: Product[] = [
     id: 2,
     slug: 'spicy-burger',
     name: 'Inferno Burger',
-    price: 10.99,
+    price: 1050,
     image: '/images/product-spicy-burger.png',
     rating: 4.7,
     tag: 'Spicy',
@@ -46,7 +46,7 @@ const products: Product[] = [
     id: 3,
     slug: 'pepperoni-pizza',
     name: 'Pepperoni Blaze',
-    price: 12.99,
+    price: 1200,
     image: '/images/product-pepperoni-pizza.png',
     rating: 4.8,
     tag: 'Best Seller',
@@ -56,7 +56,7 @@ const products: Product[] = [
     id: 4,
     slug: 'chicken-wings',
     name: 'Blazing Wings',
-    price: 7.99,
+    price: 750,
     image: '/images/product-chicken-wings.png',
     rating: 4.6,
     tag: 'Popular',
@@ -66,7 +66,7 @@ const products: Product[] = [
     id: 5,
     slug: 'loaded-hotdog',
     name: 'Loaded Fire Dog',
-    price: 6.99,
+    price: 700,
     image: '/images/product-loaded-hotdog.png',
     rating: 4.5,
     tag: 'New',
@@ -76,7 +76,7 @@ const products: Product[] = [
     id: 6,
     slug: 'fries',
     name: 'Truffle Fire Fries',
-    price: 4.99,
+    price: 550,
     image: '/images/product-fries.png',
     rating: 4.4,
     description: 'Crispy golden fries tossed in truffle oil, parmesan cheese, and fresh herbs with spicy aioli.',
@@ -98,7 +98,7 @@ export default function PopularItems({ onViewProduct }: PopularItemsProps) {
     addItem({
       id: product.slug,
       name: product.name,
-      price: Math.round(product.price * 100),
+      price: product.price,
       image: product.image,
       quantity: 1,
     })
@@ -186,7 +186,7 @@ export default function PopularItems({ onViewProduct }: PopularItemsProps) {
                         {product.name}
                       </span>
                       <span className="text-fire-gradient font-black text-lg">
-                        ${product.price.toFixed(2)}
+                        Rs. {product.price.toLocaleString()}
                       </span>
                     </div>
                     <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
