@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import FireIntro from '@/components/FireIntro'
 import HeroSection from '@/components/HeroSection'
-import TrustPanel from '@/components/TrustPanel'
 import MenuCategories from '@/components/MenuCategories'
 import PopularItems from '@/components/PopularItems'
 import SpecialsSection from '@/components/SpecialsSection'
@@ -39,7 +38,6 @@ export default function Home() {
         }`}
       >
         <HeroSection />
-        <TrustPanel />
         <MenuCategories />
         <PopularItems onViewProduct={setSelectedProduct} />
         <SpecialsSection />
