@@ -320,12 +320,12 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Add-ons
               </h3>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col gap-2">
                 {addonOptions.map((addon, idx) => (
                   <button
                     key={addon.label}
                     onClick={() => toggleAddon(idx)}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all border ${
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all border ${
                       selectedAddons.includes(idx)
                         ? 'bg-primary/20 text-primary border-primary/50'
                         : 'bg-card text-muted-foreground border-border hover:border-primary/30'
@@ -341,20 +341,20 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
             </div>
 
             {/* Quantity & Add to Order */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
+            <div className="flex flex-col gap-3 mb-6">
               <div className="flex items-center border border-border rounded-lg overflow-hidden">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  className="px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex-1 flex items-center justify-start"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="px-4 py-2 text-foreground font-medium min-w-[48px] text-center">
+                <span className="px-4 py-3 text-foreground font-bold text-lg min-w-[56px] text-center">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="px-3 py-2 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                  className="px-4 py-3 text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex-1 flex items-center justify-end"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
