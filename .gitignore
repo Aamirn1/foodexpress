@@ -36,19 +36,31 @@ yarn-error.log*
 # vercel
 .vercel
 
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Sandbox / dev
 local-*
 .claude
 .z-ai-config
 *.log
 dev.log
 dev.out.log
+server.log
 test
 prompt
+worklog.md
 
-server.log
-# Skills directory
+# Sandbox infrastructure
 /skills/
+.zscripts/
+Caddyfile
+examples/
+mini-services/
+agent-ctx/
+download/
+
+# Database
+/db/
+db/
