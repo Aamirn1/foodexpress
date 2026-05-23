@@ -7,7 +7,6 @@ import ScrollToTop from '@/components/ScrollToTop'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import CartDrawer from '@/components/CartDrawer'
 import SearchOverlay from '@/components/SearchOverlay'
-import PurchaseNotification from '@/components/PurchaseNotification'
 import CartNotification from '@/components/CartNotification'
 import { useCart } from '@/hooks/use-cart'
 
@@ -62,7 +61,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <ScrollToTop />
       <WhatsAppButton isCartOpen={cart.isOpen} />
-      <PurchaseNotification />
       <CartNotification
         itemName={cartNotification.itemName}
         visible={cartNotification.visible}

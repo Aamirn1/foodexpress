@@ -30,7 +30,7 @@ const sections = [
     icon: RefreshCw,
     title: 'Cancellations & Modifications',
     content: [
-      'Orders can be cancelled or modified within 5 minutes of placement by contacting us at (123) 456-7890.',
+      'Orders can be cancelled or modified within 5 minutes of placement by contacting us at +92 320 5719979.',
       'After 5 minutes, orders enter preparation and may not be eligible for cancellation or modification.',
       'We reserve the right to cancel orders due to unforeseen circumstances including severe weather, equipment failure, or supply issues.',
       'If we cancel your order, you will receive a full refund to your original payment method within 5-7 business days.',

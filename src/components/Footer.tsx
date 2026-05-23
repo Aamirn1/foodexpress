@@ -130,7 +130,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Phone className="w-4 h-4 text-primary shrink-0" />
-                <a href="tel:+1234567890" className="hover:text-primary transition-colors">(123) 456-7890</a>
+                <a href="tel:+923205719979" className="hover:text-primary transition-colors">+92 320 5719979</a>
               </li>
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Mail className="w-4 h-4 text-primary shrink-0" />
@@ -138,7 +138,7 @@ export default function Footer() {
               </li>
               <li className="flex items-start gap-2 text-muted-foreground text-sm">
                 <MapPin className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                <span>123 Flavor Street, Food District, NY 10001</span>
+                <span>Lalkurti, Rawalpindi</span>
               </li>
             </ul>
             <div className="mt-5">

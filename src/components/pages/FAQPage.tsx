@@ -19,7 +19,7 @@ const faqItems = [
   },
   {
     question: 'Can I cancel or modify my order?',
-    answer: 'You can cancel or modify your order within 5 minutes of placing it by calling us at (123) 456-7890. After 5 minutes, your order enters preparation and may not be eligible for cancellation. We will always try our best to accommodate changes.',
+    answer: 'You can cancel or modify your order within 5 minutes of placing it by calling us at +92 320 5719979. After 5 minutes, your order enters preparation and may not be eligible for cancellation. We will always try our best to accommodate changes.',
   },
   {
     question: 'What payment methods do you accept?',
@@ -31,7 +31,7 @@ const faqItems = [
   },
   {
     question: 'Do you offer catering for events?',
-    answer: 'Absolutely! We offer catering services for events of all sizes, from office lunches to large parties. Our catering menu includes party platters, bulk orders, and custom packages. Please contact us at least 48 hours in advance for catering orders by calling (123) 456-7890 or emailing catering@foodexpress.com.',
+    answer: 'Absolutely! We offer catering services for events of all sizes, from office lunches to large parties. Our catering menu includes party platters, bulk orders, and custom packages. Please contact us at least 48 hours in advance for catering orders by calling +92 320 5719979 or emailing catering@foodexpress.com.',
   },
   {
     question: 'Is your packaging eco-friendly?',
@@ -159,10 +159,10 @@ export default function FAQPage() {
               Our team is here to help. Reach out to us and we will get back to you as soon as possible.
             </p>
             <a
-              href="tel:+1234567890"
+              href="tel:+923205719979"
               className="inline-flex items-center gap-2 text-primary font-semibold hover:underline"
             >
-              Call us at (123) 456-7890
+              Call us at +92 320 5719979
             </a>
           </motion.div>
         </div>

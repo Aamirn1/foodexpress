@@ -1,9 +1,49 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+
+const typewriterWords = ['Fire', 'Flavor', 'Passion', 'Excellence']
+
+function TypewriterText() {
+  const [wordIndex, setWordIndex] = useState(0)
+  const [charIndex, setCharIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  useEffect(() => {
+    const currentWord = typewriterWords[wordIndex]
+    let timeout: NodeJS.Timeout
+
+    if (!isDeleting && charIndex < currentWord.length) {
+      // Typing
+      timeout = setTimeout(() => setCharIndex((c) => c + 1), 100)
+    } else if (!isDeleting && charIndex === currentWord.length) {
+      // Pause at end of word
+      timeout = setTimeout(() => setIsDeleting(true), 2000)
+    } else if (isDeleting && charIndex > 0) {
+      // Deleting
+      timeout = setTimeout(() => setCharIndex((c) => c - 1), 60)
+    } else if (isDeleting && charIndex === 0) {
+      // Move to next word
+      setIsDeleting(false)
+      setWordIndex((prev) => (prev + 1) % typewriterWords.length)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [charIndex, isDeleting, wordIndex])
+
+  const displayText = typewriterWords[wordIndex].slice(0, charIndex)
+
+  return (
+    <span className="text-fire-gradient mt-2 inline-flex">
+      {displayText}
+      <span className="animate-pulse text-primary ml-0.5">|</span>
+    </span>
+  )
+}
 
 export default function HeroSection() {
   return (
@@ -37,7 +77,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <span className="block text-foreground">Where Flavor Meets</span>
-          <span className="block text-fire-gradient mt-2">Fire</span>
+          <TypewriterText />
         </motion.h1>
 
         <motion.p

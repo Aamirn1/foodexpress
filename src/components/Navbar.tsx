@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { Phone, Menu, X, Flame, Search, ShoppingCart } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Phone, Menu, Flame, Search, ShoppingCart, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -40,6 +39,18 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
   useEffect(() => {
     setMobileOpen(false)
   }, [pathname])
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [mobileOpen])
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -104,11 +115,11 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
             </button>
 
             <a
-              href="tel:+1234567890"
+              href="tel:+923205719979"
               className="hidden xl:flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors text-sm"
             >
               <Phone className="w-4 h-4" />
-              <span>(123) 456-7890</span>
+              <span>+92 320 5719979</span>
             </a>
 
             {/* Cart Button */}
@@ -166,58 +177,96 @@ export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: Nav
               )}
             </button>
 
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-foreground">
-                  <Menu className="w-6 h-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="bg-background border-border w-72">
-                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                <div className="flex flex-col gap-6 mt-8">
-                  <div className="flex items-center justify-between">
-                    <Link href="/" className="text-fire-gradient font-serif font-black text-lg" onClick={() => setMobileOpen(false)}>
-                      FOOD EXPRESS
-                    </Link>
-                  </div>
-                  <nav className="flex flex-col gap-1">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => setMobileOpen(false)}
-                        className={`text-left text-lg font-medium py-3 px-3 rounded-lg transition-colors ${
-                          isActive(link.href)
-                            ? 'text-primary bg-primary/10'
-                            : 'text-foreground/80 hover:text-primary hover:bg-secondary/50'
-                        }`}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </nav>
-                  <div className="border-t border-border/50 pt-4">
-                    <a
-                      href="tel:+1234567890"
-                      className="flex items-center gap-2 text-foreground/70 text-sm px-3"
-                    >
-                      <Phone className="w-4 h-4" />
-                      (123) 456-7890
-                    </a>
-                  </div>
-                  <Link href="/menu" onClick={() => setMobileOpen(false)}>
-                    <Button
-                      className="bg-fire-gradient text-primary-foreground font-semibold w-full"
-                    >
-                      Order Now
-                    </Button>
-                  </Link>
-                </div>
-              </SheetContent>
-            </Sheet>
+            {/* Hamburger Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-foreground"
+              onClick={() => setMobileOpen(true)}
+              aria-label="Open menu"
+            >
+              <Menu className="w-6 h-6" />
+            </Button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Drawer - Slides from Right */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMobileOpen(false)}
+            />
+
+            {/* Drawer */}
+            <motion.div
+              className="fixed top-0 right-0 bottom-0 w-[280px] bg-background border-l border-border z-[70] flex flex-col"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            >
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <Link href="/" className="text-fire-gradient font-serif font-black text-lg" onClick={() => setMobileOpen(false)}>
+                  FOOD EXPRESS
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-foreground h-8 w-8"
+                  onClick={() => setMobileOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="flex-1 overflow-y-auto py-4">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.05 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center text-lg font-medium py-3 px-5 transition-colors ${
+                        isActive(link.href)
+                          ? 'text-primary bg-primary/10 border-r-2 border-primary'
+                          : 'text-foreground/80 hover:text-primary hover:bg-secondary/50'
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* Drawer Footer */}
+              <div className="p-4 border-t border-border">
+                <Link href="/menu" onClick={() => setMobileOpen(false)}>
+                  <Button
+                    className="bg-fire-gradient text-primary-foreground font-semibold w-full"
+                  >
+                    Order Now
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </motion.header>
   )
 }

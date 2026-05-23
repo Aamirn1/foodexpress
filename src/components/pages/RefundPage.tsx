@@ -61,7 +61,7 @@ const sections = [
     icon: Phone,
     title: 'How to Request a Refund',
     content: [
-      'Call us at (123) 456-7890 during business hours (10 AM - 11 PM) for the fastest resolution.',
+      'Call us at +92 320 5719979 during business hours (10 AM - 11 PM) for the fastest resolution.',
       'Email us at support@foodexpress.com with your order number, photos of the issue, and a brief description.',
       'Use the "Report Issue" feature in our mobile app under your order history.',
       'Visit our restaurant in person with your receipt for immediate resolution.',
@@ -156,11 +156,11 @@ export default function RefundPage() {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="tel:+1234567890"
+                href="tel:+923205719979"
                 className="text-primary font-medium hover:underline text-sm flex items-center gap-2"
               >
                 <Phone className="w-4 h-4" />
-                (123) 456-7890
+                +92 320 5719979
               </a>
               <a
                 href="mailto:support@foodexpress.com"

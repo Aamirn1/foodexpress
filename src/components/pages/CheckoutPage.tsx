@@ -300,7 +300,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                         <Input
                           value={formData.phone}
                           onChange={(e) => updateField('phone', e.target.value)}
-                          placeholder="(123) 456-7890"
+                          placeholder="+92 320 5719979"
                           className="bg-background border-border text-foreground"
                         />
                       </div>
@@ -324,7 +324,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                       <Input
                         value={formData.address}
                         onChange={(e) => updateField('address', e.target.value)}
-                        placeholder="123 Flavor Street, Apt 4B"
+                        placeholder="Lalkurti, Rawalpindi"
                         className="bg-background border-border text-foreground"
                       />
                     </div>

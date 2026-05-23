@@ -8,9 +8,9 @@ const contactCards = [
   {
     icon: Phone,
     title: 'Phone',
-    detail: '(123) 456-7890',
+    detail: '+92 320 5719979',
     subtitle: 'Available for orders & inquiries',
-    href: 'tel:+1234567890',
+    href: 'tel:+923205719979',
   },
   {
     icon: Mail,
@@ -22,8 +22,8 @@ const contactCards = [
   {
     icon: MapPin,
     title: 'Location',
-    detail: '123 Flavor Street',
-    subtitle: 'Food District, NY 10001',
+    detail: 'Lalkurti, Rawalpindi',
+    subtitle: 'Rawalpindi',
     href: '#',
   },
   {
@@ -112,7 +112,7 @@ export default function ContactPage() {
                 className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-6 text-base"
               >
                 <a
-                  href="https://wa.me/1234567890"
+                  href="https://wa.me/923205719979"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -140,10 +140,10 @@ export default function ContactPage() {
               <div className="text-center relative z-10">
                 <MapPin className="w-12 h-12 text-primary/40 mx-auto mb-3" />
                 <h3 className="font-serif font-bold text-foreground text-xl mb-1">
-                  123 Flavor Street
+                  Lalkurti, Rawalpindi
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  Food District, NY 10001
+                  Rawalpindi
                 </p>
                 <p className="text-muted-foreground text-xs mt-2">
                   Interactive map coming soon
