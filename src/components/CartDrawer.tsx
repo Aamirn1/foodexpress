@@ -13,6 +13,7 @@ interface CartDrawerProps {
   totalItems: number
   updateQuantity: (id: string, size: string | undefined, spiceLevel: string | undefined, quantity: number) => void
   removeItem: (id: string, size?: string, spiceLevel?: string) => void
+  onCheckout: () => void
 }
 
 function formatPrice(price: number): string {
@@ -27,6 +28,7 @@ export default function CartDrawer({
   totalItems,
   updateQuantity,
   removeItem,
+  onCheckout,
 }: CartDrawerProps) {
   return (
     <AnimatePresence>
@@ -179,14 +181,14 @@ export default function CartDrawer({
                   <span className="text-muted-foreground font-medium">Subtotal</span>
                   <span className="text-xl font-bold text-foreground">{formatPrice(subtotal)}</span>
                 </div>
-                <a
-                  href="/checkout"
+                <button
+                  onClick={onCheckout}
                   className="block w-full py-3.5 bg-fire-gradient text-primary-foreground font-bold rounded-xl text-center
                     shadow-lg shadow-primary/20 hover:shadow-primary/40
                     hover:opacity-90 transition-all duration-300 btn-fire-glow"
                 >
-                  Proceed to Checkout
-                </a>
+                  Proceed to Checkout 🚀
+                </button>
                 <button
                   onClick={onClose}
                   className="block w-full py-2.5 text-center text-sm text-muted-foreground hover:text-foreground transition-colors"

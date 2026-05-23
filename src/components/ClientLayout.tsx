@@ -1,18 +1,22 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ScrollToTop from '@/components/ScrollToTop'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import CartDrawer from '@/components/CartDrawer'
 import SearchOverlay from '@/components/SearchOverlay'
+import RocketTransition from '@/components/RocketTransition'
 import { Toaster } from '@/components/ui/toaster'
 import { CartProvider, useCart } from '@/hooks/use-cart'
+import { useRouter } from 'next/navigation'
 
 function InnerLayout({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false)
+  const [showRocket, setShowRocket] = useState(false)
   const cart = useCart()
+  const router = useRouter()
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -24,6 +28,19 @@ function InnerLayout({ children }: { children: React.ReactNode }) {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
+
+  const handleCheckout = useCallback(() => {
+    // Close cart drawer first
+    cart.closeCart()
+    // Trigger rocket animation
+    setShowRocket(true)
+  }, [cart])
+
+  const onRocketComplete = useCallback(() => {
+    setShowRocket(false)
+    // Navigate to checkout after rocket animation
+    router.push('/checkout')
+  }, [router])
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -43,12 +60,16 @@ function InnerLayout({ children }: { children: React.ReactNode }) {
         totalItems={cart.totalItems}
         updateQuantity={cart.updateQuantity}
         removeItem={cart.removeItem}
+        onCheckout={handleCheckout}
       />
 
       <SearchOverlay isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
       <ScrollToTop />
       <WhatsAppButton isCartOpen={cart.isOpen} />
       <Toaster />
+
+      {/* Global Rocket Transition */}
+      <RocketTransition isActive={showRocket} onComplete={onRocketComplete} />
     </div>
   )
 }
