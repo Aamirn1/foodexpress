@@ -89,10 +89,10 @@ export default function SpecialsSection() {
             </h2>
 
             <div className="flex items-center gap-3 mt-4">
-              <span className="text-3xl font-black text-fire-gradient">$14.99</span>
-              <span className="text-xl text-muted-foreground line-through">$18.99</span>
+              <span className="text-3xl font-black text-fire-gradient">Rs. 1,200</span>
+              <span className="text-xl text-muted-foreground line-through">Rs. 1,500</span>
               <Badge variant="outline" className="border-primary text-primary">
-                Save $4.00
+                Save Rs. 300
               </Badge>
             </div>
 

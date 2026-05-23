@@ -15,8 +15,8 @@ interface CartDrawerProps {
   removeItem: (id: string, size?: string, spiceLevel?: string) => void
 }
 
-function formatPrice(cents: number): string {
-  return `$${(cents / 100).toFixed(2)}`
+function formatPrice(price: number): string {
+  return `Rs. ${price.toLocaleString()}`
 }
 
 export default function CartDrawer({

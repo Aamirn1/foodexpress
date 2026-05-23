@@ -67,7 +67,7 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
     ? (menuItem.price + extraCharges) * quantity
     : 0
 
-  const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`
+  const formatPrice = (price: number) => `Rs. ${price.toLocaleString()}`
 
   const toggleAddon = (idx: number) => {
     setSelectedAddons((prev) =>
@@ -404,7 +404,7 @@ export default function MenuItemPage({ id }: MenuItemPageProps) {
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-card border border-border">
                 <Truck className="w-5 h-5 text-primary mb-1" />
                 <span className="text-xs text-muted-foreground">
-                  Free Delivery over $25
+                  Free Delivery over Rs. 2,500
                 </span>
               </div>
               <div className="flex flex-col items-center text-center p-3 rounded-lg bg-card border border-border">

@@ -34,8 +34,7 @@ export default function MenuPage() {
     const range = priceRanges[activePriceRange]
     if (range) {
       items = items.filter((item) => {
-        const price = item.price / 100
-        return price >= range.min && price <= range.max
+        return item.price >= range.min && item.price <= range.max
       })
     }
 

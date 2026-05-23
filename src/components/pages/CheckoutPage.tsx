@@ -49,10 +49,10 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
 
   const [paymentMethod, setPaymentMethod] = useState('cash')
 
-  const deliveryFee = subtotal >= 2500 ? 0 : 399
+  const deliveryFee = subtotal >= 2500 ? 0 : 150
   const total = subtotal + deliveryFee
 
-  const formatPrice = (cents: number) => `$${(cents / 100).toFixed(2)}`
+  const formatPrice = (price: number) => `Rs. ${price.toLocaleString()}`
 
   const updateField = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))

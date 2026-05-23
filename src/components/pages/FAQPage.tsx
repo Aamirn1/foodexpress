@@ -11,7 +11,7 @@ const faqItems = [
   },
   {
     question: 'What is the minimum order amount for delivery?',
-    answer: 'Our minimum order for delivery is $15. Orders over $25 qualify for free delivery within our standard delivery zone. For orders under $25, a small delivery fee of $3.99 applies.',
+    answer: 'Our minimum order for delivery is Rs. 1,000. Orders over Rs. 2,500 qualify for free delivery within our standard delivery zone. For orders under Rs. 2,500, a small delivery fee of Rs. 150 applies.',
   },
   {
     question: 'Do you provide allergen information?',
@@ -39,7 +39,7 @@ const faqItems = [
   },
   {
     question: 'Do you have loyalty or rewards programs?',
-    answer: 'Yes! Our Fire Rewards program earns you points on every order. You get 1 point for every dollar spent, and every 100 points earns you $5 off your next order. Sign up through our app or website to start earning today. Bonus points are available during special promotions.',
+    answer: 'Yes! Our Fire Rewards program earns you points on every order. You get 1 point for every Rs. 100 spent, and every 100 points earns you Rs. 500 off your next order. Sign up through our app or website to start earning today. Bonus points are available during special promotions.',
   },
   {
     question: 'Can I customize my order?',

@@ -54,8 +54,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'classic-burger',
     name: 'Classic Smash Burger',
-    price: 899,
-    priceFormatted: '$8.99',
+    price: 850,
+    priceFormatted: 'Rs. 850',
     category: 'Burgers',
     categorySlug: 'burgers',
     images: ['/images/product-classic-burger.png'],
@@ -71,8 +71,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'spicy-burger',
     name: 'Inferno Burger',
-    price: 1099,
-    priceFormatted: '$10.99',
+    price: 1050,
+    priceFormatted: 'Rs. 1,050',
     category: 'Burgers',
     categorySlug: 'burgers',
     images: ['/images/product-spicy-burger.png'],
@@ -88,8 +88,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'pepperoni-pizza',
     name: 'Pepperoni Blaze',
-    price: 1299,
-    priceFormatted: '$12.99',
+    price: 1200,
+    priceFormatted: 'Rs. 1,200',
     category: 'Pizza',
     categorySlug: 'pizza',
     images: ['/images/product-pepperoni-pizza.png'],
@@ -105,8 +105,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'chicken-wings',
     name: 'Blazing Wings',
-    price: 799,
-    priceFormatted: '$7.99',
+    price: 750,
+    priceFormatted: 'Rs. 750',
     category: 'Chicken',
     categorySlug: 'chicken',
     images: ['/images/product-chicken-wings.png'],
@@ -122,8 +122,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'loaded-hotdog',
     name: 'Loaded Fire Dog',
-    price: 699,
-    priceFormatted: '$6.99',
+    price: 700,
+    priceFormatted: 'Rs. 700',
     category: 'Burgers',
     categorySlug: 'burgers',
     images: ['/images/product-loaded-hotdog.png'],
@@ -139,8 +139,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'fries',
     name: 'Truffle Fire Fries',
-    price: 499,
-    priceFormatted: '$4.99',
+    price: 550,
+    priceFormatted: 'Rs. 550',
     category: 'Burgers',
     categorySlug: 'burgers',
     images: ['/images/product-fries.png'],
@@ -155,8 +155,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'milkshake',
     name: 'Fire Shake',
-    price: 599,
-    priceFormatted: '$5.99',
+    price: 600,
+    priceFormatted: 'Rs. 600',
     category: 'Desserts',
     categorySlug: 'desserts',
     images: ['/images/product-milkshake.png'],
@@ -172,8 +172,8 @@ export const menuItems: MenuItem[] = [
   {
     id: 'bbq-chicken',
     name: 'BBQ Chicken Platter',
-    price: 1499,
-    priceFormatted: '$14.99',
+    price: 1500,
+    priceFormatted: 'Rs. 1,500',
     category: 'Chicken',
     categorySlug: 'chicken',
     images: ['/images/category-chicken.png'],
@@ -190,10 +190,10 @@ export const menuItems: MenuItem[] = [
 
 export const priceRanges = [
   { label: 'All Prices', min: 0, max: Infinity },
-  { label: 'Under $5', min: 0, max: 5 },
-  { label: '$5 - $10', min: 5, max: 10 },
-  { label: '$10 - $15', min: 10, max: 15 },
-  { label: 'Over $15', min: 15, max: Infinity },
+  { label: 'Under Rs. 700', min: 0, max: 700 },
+  { label: 'Rs. 700 - 1,000', min: 700, max: 1000 },
+  { label: 'Rs. 1,000 - 1,500', min: 1000, max: 1500 },
+  { label: 'Over Rs. 1,500', min: 1500, max: Infinity },
 ]
 
 export function getMenuItemsByCategory(slug: string): MenuItem[] {
