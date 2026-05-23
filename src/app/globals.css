@@ -1,0 +1,236 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --animate-fire-shimmer: fire-shimmer 3s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Premium Dark Theme with Fire Accents */
+  --background: hsl(20 14% 4%);
+  --foreground: hsl(30 20% 94%);
+  --card: hsl(20 12% 8%);
+  --card-foreground: hsl(30 20% 94%);
+  --popover: hsl(20 12% 8%);
+  --popover-foreground: hsl(30 20% 94%);
+  --primary: hsl(18 100% 60%);
+  --primary-foreground: hsl(20 14% 4%);
+  --secondary: hsl(20 10% 14%);
+  --secondary-foreground: hsl(30 20% 94%);
+  --muted: hsl(20 8% 16%);
+  --muted-foreground: hsl(30 10% 60%);
+  --accent: hsl(43 100% 50%);
+  --accent-foreground: hsl(20 14% 4%);
+  --destructive: hsl(0 72% 51%);
+  --border: hsl(20 10% 18%);
+  --input: hsl(20 10% 18%);
+  --ring: hsl(18 100% 60%);
+  --chart-1: hsl(18 100% 60%);
+  --chart-2: hsl(43 100% 50%);
+  --chart-3: hsl(0 80% 55%);
+  --chart-4: hsl(30 90% 55%);
+  --chart-5: hsl(15 85% 50%);
+  --sidebar: hsl(20 12% 8%);
+  --sidebar-foreground: hsl(30 20% 94%);
+  --sidebar-primary: hsl(18 100% 60%);
+  --sidebar-primary-foreground: hsl(20 14% 4%);
+  --sidebar-accent: hsl(20 10% 14%);
+  --sidebar-accent-foreground: hsl(30 20% 94%);
+  --sidebar-border: hsl(20 10% 18%);
+  --sidebar-ring: hsl(18 100% 60%);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Fire gradient text */
+.text-fire-gradient {
+  background: linear-gradient(135deg, hsl(43, 100%, 50%), hsl(18, 100%, 60%), hsl(0, 80%, 55%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Fire gradient background for buttons */
+.bg-fire-gradient {
+  background: linear-gradient(135deg, hsl(43, 100%, 50%), hsl(18, 100%, 60%), hsl(0, 80%, 55%));
+}
+
+/* Glowing fire effect on buttons */
+.btn-fire-glow {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px hsl(18 100% 60% / 0.4), 0 0 40px hsl(18 100% 60% / 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.btn-fire-glow:hover {
+  box-shadow: 0 0 30px hsl(18 100% 60% / 0.6), 0 0 60px hsl(18 100% 60% / 0.3), 0 0 90px hsl(18 100% 60% / 0.15);
+}
+
+.btn-fire-glow::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    hsl(43 100% 50% / 0.15) 50%,
+    transparent 70%
+  );
+  animation: fire-shimmer 3s ease-in-out infinite;
+}
+
+/* Card hover glow effect with fire colors */
+.card-glow {
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 25px hsl(18 100% 60% / 0.2), 0 0 50px hsl(18 100% 60% / 0.1);
+  border-color: hsl(18 100% 60% / 0.3);
+}
+
+/* 3D card perspective effects */
+.card-3d {
+  perspective: 1000px;
+}
+
+.card-3d-inner {
+  transition: transform 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+.card-3d:hover .card-3d-inner {
+  transform: rotateY(5deg) rotateX(5deg);
+}
+
+/* Custom scrollbar with fire colors */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(20 14% 4%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, hsl(43 100% 50%), hsl(18 100% 60%));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, hsl(43 100% 60%), hsl(18 100% 70%));
+}
+
+/* Glow pulse animation for CTA buttons */
+.glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Keyframe animations */
+@keyframes fire-shimmer {
+  0%, 100% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(18 100% 60% / 0.4), 0 0 40px hsl(18 100% 60% / 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px hsl(18 100% 60% / 0.6), 0 0 60px hsl(18 100% 60% / 0.3), 0 0 90px hsl(18 100% 60% / 0.15);
+  }
+}
+
+@keyframes fire-particle-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes fire-flicker {
+  0%, 100% { opacity: 0.8; }
+  25% { opacity: 1; }
+  50% { opacity: 0.6; }
+  75% { opacity: 0.9; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
