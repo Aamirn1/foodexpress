@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
@@ -50,8 +51,8 @@ export default function MenuCategories() {
         {/* Categories Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {categories.map((category, i) => (
+            <Link key={category.name} href={`/menu?category=${category.name.toLowerCase()}`}>
             <motion.div
-              key={category.name}
               className="card-3d group cursor-pointer"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -79,6 +80,7 @@ export default function MenuCategories() {
                 </div>
               </div>
             </motion.div>
+            </Link>
           ))}
         </div>
       </div>

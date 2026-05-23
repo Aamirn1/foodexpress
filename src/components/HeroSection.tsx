@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -55,21 +56,23 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
         >
-          <Button
-            className="bg-fire-gradient text-primary-foreground font-semibold px-8 py-6 text-lg btn-fire-glow hover:opacity-90 transition-opacity"
-            size="lg"
-            onClick={() => document.querySelector('#menu')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            Order Now
-          </Button>
-          <Button
-            variant="outline"
-            className="border-primary/50 text-primary hover:bg-primary/10 font-semibold px-8 py-6 text-lg"
-            size="lg"
-            onClick={() => document.querySelector('#menu')?.scrollIntoView({ behavior: 'smooth' })}
-          >
-            View Menu
-          </Button>
+          <Link href="/menu">
+            <Button
+              className="bg-fire-gradient text-primary-foreground font-semibold px-8 py-6 text-lg btn-fire-glow hover:opacity-90 transition-opacity"
+              size="lg"
+            >
+              Order Now
+            </Button>
+          </Link>
+          <Link href="/menu">
+            <Button
+              variant="outline"
+              className="border-primary/50 text-primary hover:bg-primary/10 font-semibold px-8 py-6 text-lg"
+              size="lg"
+            >
+              View Menu
+            </Button>
+          </Link>
         </motion.div>
       </div>
 

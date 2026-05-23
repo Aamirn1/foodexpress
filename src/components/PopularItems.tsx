@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Star, Eye } from 'lucide-react'
@@ -14,60 +15,68 @@ interface Product {
   rating: number
   tag?: string
   description: string
+  slug: string
 }
 
 const products: Product[] = [
   {
     id: 1,
-    name: 'Classic Cheeseburger',
+    slug: 'classic-burger',
+    name: 'Classic Smash Burger',
     price: 8.99,
     image: '/images/product-classic-burger.png',
     rating: 4.9,
-    tag: 'Best Seller',
-    description: 'Juicy beef patty with melted cheddar, fresh lettuce, tomato, and our signature sauce.',
+    tag: "Chef's Special",
+    description: 'Two thin beef patties, melted cheddar, caramelized onions, pickles, and our secret Fire Sauce on a toasted brioche bun.',
   },
   {
     id: 2,
-    name: 'Spicy Fire Burger',
+    slug: 'spicy-burger',
+    name: 'Inferno Burger',
     price: 10.99,
     image: '/images/product-spicy-burger.png',
-    rating: 4.8,
+    rating: 4.7,
     tag: 'Spicy',
-    description: 'Double patty with ghost pepper sauce, jalapeños, pepper jack cheese, and sriracha mayo.',
+    description: 'A juicy beef patty topped with ghost pepper sauce, jalapeños, habanero cheese, and crispy onion rings.',
   },
   {
     id: 3,
-    name: 'Pepperoni Pizza',
+    slug: 'pepperoni-pizza',
+    name: 'Pepperoni Blaze',
     price: 12.99,
     image: '/images/product-pepperoni-pizza.png',
-    rating: 5.0,
-    tag: 'Popular',
-    description: 'Wood-fired pizza loaded with pepperoni, mozzarella, and our house-made tomato sauce.',
+    rating: 4.8,
+    tag: 'Best Seller',
+    description: 'Wood-fired pizza with crispy thin crust, tangy tomato sauce, mozzarella, and premium pepperoni.',
   },
   {
     id: 4,
-    name: 'Crispy Wings (8pc)',
-    price: 9.99,
+    slug: 'chicken-wings',
+    name: 'Blazing Wings',
+    price: 7.99,
     image: '/images/product-chicken-wings.png',
-    rating: 4.7,
-    description: 'Golden fried chicken wings tossed in our signature buffalo or BBQ sauce.',
+    rating: 4.6,
+    tag: 'Popular',
+    description: '8 crispy fried chicken wings tossed in our signature Blazing Sauce, served with ranch dip.',
   },
   {
     id: 5,
-    name: 'Loaded Hot Dog',
-    price: 7.99,
+    slug: 'loaded-hotdog',
+    name: 'Loaded Fire Dog',
+    price: 6.99,
     image: '/images/product-loaded-hotdog.png',
-    rating: 4.6,
+    rating: 4.5,
     tag: 'New',
-    description: 'All-beef frank topped with chili, cheese, crispy onions, and our special relish.',
+    description: 'Premium all-beef hotdog loaded with chili, melted cheese, crispy bacon bits, and spicy mustard.',
   },
   {
     id: 6,
-    name: 'Golden Fries',
+    slug: 'fries',
+    name: 'Truffle Fire Fries',
     price: 4.99,
     image: '/images/product-fries.png',
-    rating: 4.5,
-    description: 'Crispy golden fries seasoned with our house blend of spices and herbs.',
+    rating: 4.4,
+    description: 'Crispy golden fries tossed in truffle oil, parmesan cheese, and fresh herbs with spicy aioli.',
   },
 ]
 
@@ -117,8 +126,8 @@ export default function PopularItems({ onViewProduct }: PopularItemsProps) {
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  {/* Hover overlay with View in 3D */}
-                  <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  {/* Hover overlay with View in 3D and View Details */}
+                  <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
                     <Button
                       className="bg-fire-gradient text-primary-foreground font-semibold btn-fire-glow"
                       onClick={() => onViewProduct(product)}
@@ -138,9 +147,9 @@ export default function PopularItems({ onViewProduct }: PopularItemsProps) {
                 {/* Content */}
                 <div className="p-4 md:p-5">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-serif text-lg font-bold text-foreground group-hover:text-fire-gradient transition-colors">
+                    <Link href={`/menu/${product.slug}`} className="font-serif text-lg font-bold text-foreground group-hover:text-fire-gradient transition-colors hover:underline underline-offset-2">
                       {product.name}
-                    </h3>
+                    </Link>
                     <span className="text-fire-gradient font-black text-lg">
                       ${product.price.toFixed(2)}
                     </span>
@@ -148,26 +157,52 @@ export default function PopularItems({ onViewProduct }: PopularItemsProps) {
                   <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
                     {product.description}
                   </p>
-                  <div className="flex items-center gap-1">
-                    {Array.from({ length: 5 }).map((_, idx) => (
-                      <Star
-                        key={idx}
-                        className={`w-4 h-4 ${
-                          idx < Math.floor(product.rating)
-                            ? 'text-accent fill-accent'
-                            : 'text-muted-foreground/30'
-                        }`}
-                      />
-                    ))}
-                    <span className="text-muted-foreground text-sm ml-1">
-                      {product.rating}
-                    </span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <Star
+                          key={idx}
+                          className={`w-4 h-4 ${
+                            idx < Math.floor(product.rating)
+                              ? 'text-accent fill-accent'
+                              : 'text-muted-foreground/30'
+                          }`}
+                        />
+                      ))}
+                      <span className="text-muted-foreground text-sm ml-1">
+                        {product.rating}
+                      </span>
+                    </div>
+                    <Link href={`/menu/${product.slug}`}>
+                      <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
+                        View Details
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* View All Button */}
+        <motion.div
+          className="text-center mt-10"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Link href="/menu">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-primary/50 text-primary hover:bg-primary/10 font-semibold px-8"
+            >
+              View Full Menu
+            </Button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   )

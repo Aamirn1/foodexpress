@@ -1,21 +1,32 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Phone, Menu, X, Flame } from 'lucide-react'
+import { Phone, Menu, X, Flame, Search, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet'
 
 const navLinks = [
-  { label: 'Menu', href: '#menu' },
-  { label: 'Specials', href: '#specials' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/' },
+  { label: 'Menu', href: '/menu' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
+  { label: 'FAQ', href: '/faq' },
 ]
 
-export default function Navbar() {
+interface NavbarProps {
+  onSearchOpen?: () => void
+  onCartOpen?: () => void
+  totalItems?: number
+}
+
+export default function Navbar({ onSearchOpen, onCartOpen, totalItems = 0 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,12 +36,14 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleNavClick = (href: string) => {
+  // Close mobile menu on route change
+  useEffect(() => {
     setMobileOpen(false)
-    const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
-    }
+  }, [pathname])
+
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
   }
 
   return (
@@ -47,47 +60,112 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+          <Link href="/" className="flex items-center gap-2 group">
             <Flame className="w-7 h-7 text-primary group-hover:scale-110 transition-transform" />
             <span className="text-fire-gradient font-serif font-black text-xl md:text-2xl tracking-tight">
               FOOD EXPRESS
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
-              <button
+              <Link
                 key={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className="text-foreground/80 hover:text-primary transition-colors text-sm font-medium tracking-wide uppercase relative group"
+                href={link.href}
+                className={`text-sm font-medium tracking-wide uppercase relative group transition-colors ${
+                  isActive(link.href)
+                    ? 'text-primary'
+                    : 'text-foreground/80 hover:text-primary'
+                }`}
               >
                 {link.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-fire-gradient group-hover:w-full transition-all duration-300" />
-              </button>
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-fire-gradient transition-all duration-300 ${
+                    isActive(link.href) ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                />
+              </Link>
             ))}
           </nav>
 
           {/* Desktop Right */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            {/* Search Button */}
+            <button
+              onClick={onSearchOpen}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/60 border border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/30 transition-all text-sm"
+            >
+              <Search className="w-4 h-4" />
+              <span className="text-xs hidden sm:inline">Search</span>
+              <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-secondary text-[10px] text-muted-foreground font-mono">
+                Ctrl+K
+              </kbd>
+            </button>
+
             <a
               href="tel:+1234567890"
-              className="flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors text-sm"
+              className="hidden xl:flex items-center gap-2 text-foreground/70 hover:text-primary transition-colors text-sm"
             >
               <Phone className="w-4 h-4" />
               <span>(123) 456-7890</span>
             </a>
-            <Button
-              className="bg-fire-gradient text-primary-foreground font-semibold glow-pulse hover:opacity-90 transition-opacity"
-              size="sm"
-              onClick={() => handleNavClick('#menu')}
+
+            {/* Cart Button */}
+            <button
+              onClick={onCartOpen}
+              className="relative w-10 h-10 rounded-full bg-secondary/60 border border-border/50 flex items-center justify-center text-foreground hover:text-primary hover:border-primary/30 transition-all"
+              aria-label="Open cart"
             >
-              Order Now
-            </Button>
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center"
+                >
+                  {totalItems > 9 ? '9+' : totalItems}
+                </motion.span>
+              )}
+            </button>
+
+            <Link href="/menu">
+              <Button
+                className="bg-fire-gradient text-primary-foreground font-semibold glow-pulse hover:opacity-90 transition-opacity"
+                size="sm"
+              >
+                Order Now
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu */}
           <div className="flex md:hidden items-center gap-2">
+            {/* Mobile Search */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-foreground h-9 w-9"
+              onClick={onSearchOpen}
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5" />
+            </Button>
+
+            {/* Mobile Cart */}
+            <button
+              onClick={onCartOpen}
+              className="relative w-9 h-9 rounded-full bg-secondary/60 flex items-center justify-center text-foreground"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold flex items-center justify-center">
+                  {totalItems > 9 ? '9+' : totalItems}
+                </span>
+              )}
+            </button>
+
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-foreground">
@@ -98,37 +176,42 @@ export default function Navbar() {
                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                 <div className="flex flex-col gap-6 mt-8">
                   <div className="flex items-center justify-between">
-                    <span className="text-fire-gradient font-serif font-black text-lg">
+                    <Link href="/" className="text-fire-gradient font-serif font-black text-lg" onClick={() => setMobileOpen(false)}>
                       FOOD EXPRESS
-                    </span>
-                    <Button variant="ghost" size="icon" onClick={() => setMobileOpen(false)}>
-                      <X className="w-5 h-5" />
-                    </Button>
+                    </Link>
                   </div>
-                  <nav className="flex flex-col gap-4">
+                  <nav className="flex flex-col gap-1">
                     {navLinks.map((link) => (
-                      <button
+                      <Link
                         key={link.href}
-                        onClick={() => handleNavClick(link.href)}
-                        className="text-left text-foreground/80 hover:text-primary transition-colors text-lg font-medium py-2 border-b border-border/50"
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`text-left text-lg font-medium py-3 px-3 rounded-lg transition-colors ${
+                          isActive(link.href)
+                            ? 'text-primary bg-primary/10'
+                            : 'text-foreground/80 hover:text-primary hover:bg-secondary/50'
+                        }`}
                       >
                         {link.label}
-                      </button>
+                      </Link>
                     ))}
                   </nav>
-                  <a
-                    href="tel:+1234567890"
-                    className="flex items-center gap-2 text-foreground/70 text-sm"
-                  >
-                    <Phone className="w-4 h-4" />
-                    (123) 456-7890
-                  </a>
-                  <Button
-                    className="bg-fire-gradient text-primary-foreground font-semibold w-full"
-                    onClick={() => handleNavClick('#menu')}
-                  >
-                    Order Now
-                  </Button>
+                  <div className="border-t border-border/50 pt-4">
+                    <a
+                      href="tel:+1234567890"
+                      className="flex items-center gap-2 text-foreground/70 text-sm px-3"
+                    >
+                      <Phone className="w-4 h-4" />
+                      (123) 456-7890
+                    </a>
+                  </div>
+                  <Link href="/menu" onClick={() => setMobileOpen(false)}>
+                    <Button
+                      className="bg-fire-gradient text-primary-foreground font-semibold w-full"
+                    >
+                      Order Now
+                    </Button>
+                  </Link>
                 </div>
               </SheetContent>
             </Sheet>
