@@ -1,0 +1,25 @@
+{
+  "name": "Food Express - Where Flavor Meets Fire",
+  "short_name": "Food Express",
+  "description": "Experience the boldest flavors in town. From sizzling burgers to wood-fired pizzas — every bite is a masterpiece.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#FF6B00",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["food", "restaurant"],
+  "lang": "en-US"
+}
