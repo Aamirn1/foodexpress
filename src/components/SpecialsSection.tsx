@@ -59,7 +59,7 @@ export default function SpecialsSection() {
           >
             <div className="relative w-full max-w-md mx-auto aspect-square">
               <div className="absolute -inset-4 bg-fire-gradient rounded-2xl opacity-20 blur-2xl" />
-              <div className="relative overflow-hidden rounded-2xl border border-border">
+              <div className="relative w-full h-full overflow-hidden rounded-2xl border border-border">
                 <Image
                   src="/images/product-double-smash-burger.png"
                   alt="Double Smash Burger"
