@@ -53,6 +53,10 @@ prompt
 worklog.md
 upload/
 
+# Lock files - let Vercel use npm
+bun.lock
+bun.lockb
+
 # Sandbox infrastructure
 /skills/
 .zscripts/
