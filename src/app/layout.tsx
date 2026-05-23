@@ -67,7 +67,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Food Express | Where Flavor Meets Fire 🔥",
     description:
-      "Experience the boldest flavors in town. From sizzling burgers to wood-fired pizzas — every bite is a masterpiece. Order now! 🍔🍕",
+      "Experience the boldest flavors in town. From sizzling burgers to wood-fired pizzas — every bite is a masterpiece. Order now!",
     url: siteUrl,
     siteName: "Food Express",
     type: "website",
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Food Express | Where Flavor Meets Fire 🔥",
     description:
-      "Experience the boldest flavors in town. Flame-grilled burgers, wood-fired pizzas — every bite is a masterpiece. 🍔🍕",
+      "Experience the boldest flavors in town. Flame-grilled burgers, wood-fired pizzas — every bite is a masterpiece.",
     images: [
       {
         url: "/og-image.png",
