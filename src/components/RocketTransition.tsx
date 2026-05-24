@@ -9,12 +9,12 @@ interface RocketTransitionProps {
 }
 
 export default function RocketTransition({ isActive, onComplete }: RocketTransitionProps) {
-  // Phase progression: idle → launch → zoom → idle
+  // Phase progression: idle → launch → arrive → idle
   // When first activated, we derive 'appear' from idle state
-  const [phase, setPhase] = useState<'idle' | 'launch' | 'zoom'>('idle')
+  const [phase, setPhase] = useState<'idle' | 'launch' | 'arrive'>('idle')
 
   // When isActive is true and phase is idle, display as 'appear' phase
-  const displayPhase: 'appear' | 'launch' | 'zoom' | 'idle' =
+  const displayPhase: 'appear' | 'launch' | 'arrive' | 'idle' =
     isActive && phase === 'idle' ? 'appear' : phase
 
   const stableOnComplete = useCallback(() => { onComplete() }, [onComplete])
@@ -22,18 +22,18 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
   useEffect(() => {
     if (!isActive) return
 
-    // Phase 2: Rocket launches upward (after 1.5s visible at bottom)
-    const launchTimer = setTimeout(() => setPhase('launch'), 1500)
-    // Phase 3: Rocket zooms off screen + flash (after 2.5s)
-    const zoomTimer = setTimeout(() => setPhase('zoom'), 2500)
-    // Complete after full 3.5 second animation
+    // Phase 2: Rocket launches toward burger icon (after 1s visible)
+    const launchTimer = setTimeout(() => setPhase('launch'), 1000)
+    // Phase 3: Rocket arrives at burger icon with flash (after 2.2s)
+    const arriveTimer = setTimeout(() => setPhase('arrive'), 2200)
+    // Complete after animation (3s total)
     const completeTimer = setTimeout(() => {
       setPhase('idle')
       stableOnComplete()
-    }, 3500)
+    }, 3000)
     return () => {
       clearTimeout(launchTimer)
-      clearTimeout(zoomTimer)
+      clearTimeout(arriveTimer)
       clearTimeout(completeTimer)
     }
   }, [isActive, stableOnComplete])
@@ -51,7 +51,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           <motion.div
             className="absolute inset-0 bg-black"
             initial={{ opacity: 0 }}
-            animate={{ opacity: displayPhase === 'zoom' ? 0.95 : 0.7 }}
+            animate={{ opacity: displayPhase === 'arrive' ? 0.95 : 0.7 }}
             transition={{ duration: 0.8 }}
           />
 
@@ -82,7 +82,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
                   key={i}
                   className="absolute rounded-full"
                   style={{
-                    left: `${10 + Math.random() * 15}%`,
+                    left: `${15 + Math.random() * 20}%`,
                     bottom: `${5 + Math.random() * 8}%`,
                     width: 6 + Math.random() * 14,
                     height: 6 + Math.random() * 14,
@@ -127,20 +127,20 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket - tip points toward burger icon (top-left), moves toward it */}
+          {/* Rocket - tip points toward burger icon (top-left corner), travels there */}
           <motion.div
             className="absolute"
-            style={{ left: '25%', bottom: '10%' }}
+            style={{ left: '30%', bottom: '12%' }}
             initial={{ y: 100, x: 50, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
-                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -30 }
+                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -55 }
                 : displayPhase === 'launch'
-                ? { y: -500, x: -150, scale: 1.1, opacity: 1, rotate: -30 }
-                : { y: -700, x: -200, scale: 1.2, opacity: 0, rotate: -35 }
+                ? { y: -600, x: -250, scale: 0.9, opacity: 1, rotate: -55 }
+                : { y: -750, x: -350, scale: 0.5, opacity: 0, rotate: -55 }
             }
             transition={{
-              duration: displayPhase === 'appear' ? 1.0 : displayPhase === 'launch' ? 1.0 : 0.8,
+              duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 1.2 : 0.5,
               ease: displayPhase === 'appear' ? [0.34, 1.56, 0.64, 1] : displayPhase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
             }}
           >
@@ -152,13 +152,26 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             />
           </motion.div>
 
-          {/* Screen flash effect */}
-          {displayPhase === 'zoom' && (
+          {/* Flash/impact effect at burger icon when rocket arrives */}
+          {displayPhase === 'arrive' && (
+            <motion.div
+              className="absolute top-[2%] left-[3%] w-16 h-16 sm:w-20 sm:h-20 rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(255,150,0,0.8) 0%, rgba(255,80,0,0.4) 40%, transparent 70%)',
+              }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: [0, 2, 1.5], opacity: [0, 1, 0] }}
+              transition={{ duration: 0.6 }}
+            />
+          )}
+
+          {/* Screen flash effect on arrival */}
+          {displayPhase === 'arrive' && (
             <motion.div
               className="absolute inset-0 bg-fire-gradient"
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.9, 0] }}
-              transition={{ duration: 0.8 }}
+              animate={{ opacity: [0, 0.7, 0] }}
+              transition={{ duration: 0.5 }}
             />
           )}
 
