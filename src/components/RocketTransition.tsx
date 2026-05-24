@@ -121,17 +121,17 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket - tip pointing top-right (42° clockwise), moves top-right */}
+          {/* Rocket - tip pointing top-right (38° clockwise), moves top-right */}
           <motion.div
             className="absolute"
             style={{ left: '15%', bottom: '8%' }}
             initial={{ y: 100, x: -50, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
-                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: 42 }
+                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: 38 }
                 : displayPhase === 'launch'
-                ? { y: -550, x: 350, scale: 1.1, opacity: 1, rotate: 42 }
-                : { y: -750, x: 500, scale: 0.5, opacity: 0, rotate: 42 }
+                ? { y: -550, x: 350, scale: 1.1, opacity: 1, rotate: 38 }
+                : { y: -750, x: 500, scale: 0.5, opacity: 0, rotate: 38 }
             }
             transition={{
               duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 1.2 : 0.5,
