@@ -22,15 +22,15 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
   useEffect(() => {
     if (!isActive) return
 
-    // Phase 2: Rocket launches upward (1-2.2s)
-    const launchTimer = setTimeout(() => setPhase('launch'), 1000)
-    // Phase 3: Rocket zooms off screen + flash (2.2-3.2s)
-    const zoomTimer = setTimeout(() => setPhase('zoom'), 2200)
-    // Complete after full 3+ second animation
+    // Phase 2: Rocket launches upward (after 1.5s visible at bottom)
+    const launchTimer = setTimeout(() => setPhase('launch'), 1500)
+    // Phase 3: Rocket zooms off screen + flash (after 2.5s)
+    const zoomTimer = setTimeout(() => setPhase('zoom'), 2500)
+    // Complete after full 3.5 second animation
     const completeTimer = setTimeout(() => {
       setPhase('idle')
       stableOnComplete()
-    }, 3400)
+    }, 3500)
     return () => {
       clearTimeout(launchTimer)
       clearTimeout(zoomTimer)
@@ -127,10 +127,10 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket */}
+          {/* Rocket - visible for 3 seconds total */}
           <motion.div
             className="absolute"
-            style={{ left: '10%', bottom: '5%' }}
+            style={{ left: '15%', bottom: '10%' }}
             initial={{ y: 100, x: 0, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
@@ -140,14 +140,14 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
                 : { y: -1400, x: 300, scale: 1.3, opacity: 0, rotate: -50 }
             }
             transition={{
-              duration: displayPhase === 'appear' ? 1.0 : displayPhase === 'launch' ? 1.2 : 1.0,
+              duration: displayPhase === 'appear' ? 1.0 : displayPhase === 'launch' ? 1.0 : 0.8,
               ease: displayPhase === 'appear' ? [0.34, 1.56, 0.64, 1] : displayPhase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
             }}
           >
             <img
               src="/images/rocket-animation.png"
               alt="Rocket"
-              className="w-28 h-28 sm:w-40 sm:h-40"
+              className="w-32 h-32 sm:w-48 sm:h-48"
               style={{ filter: 'drop-shadow(0 0 25px rgba(255, 100, 0, 0.7)) drop-shadow(0 0 50px rgba(255, 50, 0, 0.4))' }}
             />
           </motion.div>
@@ -193,7 +193,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
               className="text-6xl sm:text-8xl font-black"
               initial={{ scale: 2, opacity: 0 }}
               animate={{ scale: 0.8, opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.0, times: [0, 0.2, 0.7, 1] }}
+              transition={{ duration: 1.5, times: [0, 0.2, 0.7, 1] }}
               style={{
                 filter: 'drop-shadow(0 0 20px rgba(255, 100, 0, 0.6))',
               }}
