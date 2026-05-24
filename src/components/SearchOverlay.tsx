@@ -111,16 +111,15 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                       {results.length} result{results.length !== 1 ? 's' : ''} found
                     </p>
                     {results.map((item, index) => (
-                      <motion.a
+                      <motion.div
                         key={item.id}
-                        href={`/menu/${item.id}`}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
                         onClick={(e) => {
-                          e.preventDefault()
-                          handleClose()
+                          e.stopPropagation()
                           router.push('/menu')
+                          handleClose()
                         }}
                         className="flex items-center gap-4 p-3 rounded-xl bg-card/60 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-200 group cursor-pointer"
                       >
@@ -147,7 +146,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         <span className="text-sm font-bold text-primary flex-shrink-0">
                           {item.priceFormatted}
                         </span>
-                      </motion.a>
+                      </motion.div>
                     ))}
                   </div>
                 )}
