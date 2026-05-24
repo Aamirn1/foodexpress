@@ -9,9 +9,13 @@ interface ChefTransitionProps {
 }
 
 export default function ChefTransition({ isActive, onComplete }: ChefTransitionProps) {
-  const [phase, setPhase] = useState<'idle' | 'entrance' | 'celebrate' | 'fade'>(
-    isActive ? 'entrance' : 'idle'
-  )
+  // Phase progression: idle → celebrate → fade → idle
+  // When first activated, we derive 'entrance' from idle state
+  const [phase, setPhase] = useState<'idle' | 'celebrate' | 'fade'>('idle')
+
+  // When isActive is true and phase is idle, display as 'entrance' phase
+  const displayPhase: 'entrance' | 'celebrate' | 'fade' | 'idle' =
+    isActive && phase === 'idle' ? 'entrance' : phase
 
   const stableOnComplete = useCallback(() => { onComplete() }, [onComplete])
 
@@ -58,12 +62,12 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
               background: 'radial-gradient(circle, rgba(255,100,0,0.25) 0%, rgba(255,50,0,0.1) 50%, transparent 70%)',
             }}
             initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: phase === 'fade' ? 1.5 : 1, opacity: phase === 'fade' ? 0 : 1 }}
+            animate={{ scale: displayPhase === 'fade' ? 1.5 : 1, opacity: displayPhase === 'fade' ? 0 : 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           />
 
           {/* Confetti particles - starts during celebrate */}
-          {phase === 'celebrate' && (
+          {displayPhase === 'celebrate' && (
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               {Array.from({ length: 40 }).map((_, i) => (
                 <motion.div
@@ -100,15 +104,15 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
             className="relative z-10 flex flex-col items-center"
             initial={{ y: 400, scale: 0.3, opacity: 0, rotate: 10 }}
             animate={
-              phase === 'entrance'
+              displayPhase === 'entrance'
                 ? { y: 0, scale: 1, opacity: 1, rotate: 0 }
-                : phase === 'celebrate'
+                : displayPhase === 'celebrate'
                 ? { y: [0, -15, 0, -10, 0], scale: [1, 1.05, 1, 1.03, 1], opacity: 1, rotate: [0, -3, 3, -2, 0] }
                 : { y: -80, scale: 0.8, opacity: 0 }
             }
             transition={{
-              duration: phase === 'entrance' ? 1.2 : phase === 'celebrate' ? 2.3 : 0.7,
-              ease: phase === 'entrance' ? [0.34, 1.56, 0.64, 1] : 'easeInOut',
+              duration: displayPhase === 'entrance' ? 1.2 : displayPhase === 'celebrate' ? 2.3 : 0.7,
+              ease: displayPhase === 'entrance' ? [0.34, 1.56, 0.64, 1] : 'easeInOut',
             }}
           >
             <div className="relative">
@@ -125,13 +129,13 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
               className="text-center mt-4"
               initial={{ opacity: 0, y: 20 }}
               animate={
-                phase === 'celebrate'
+                displayPhase === 'celebrate'
                   ? { opacity: 1, y: 0 }
-                  : phase === 'fade'
+                  : displayPhase === 'fade'
                   ? { opacity: 0, y: -20 }
                   : { opacity: 0, y: 20 }
               }
-              transition={{ duration: 0.5, delay: phase === 'celebrate' ? 0.3 : 0 }}
+              transition={{ duration: 0.5, delay: displayPhase === 'celebrate' ? 0.3 : 0 }}
             >
               <motion.h2
                 className="text-2xl sm:text-5xl font-serif font-black text-white mb-1"
@@ -156,12 +160,12 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
           </motion.div>
 
           {/* Ringing bell animation */}
-          {(phase === 'celebrate' || phase === 'entrance') && (
+          {(displayPhase === 'celebrate' || displayPhase === 'entrance') && (
             <motion.div
               className="absolute top-[12%] right-[15%] sm:top-[15%] sm:right-[20%] z-20"
               initial={{ opacity: 0, scale: 0 }}
               animate={
-                phase === 'celebrate'
+                displayPhase === 'celebrate'
                   ? { opacity: 1, scale: [0, 1.3, 1], rotate: [0, 20, -20, 15, -15, 10, -10, 0] }
                   : { opacity: 0, scale: 0 }
               }
@@ -172,7 +176,7 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
           )}
 
           {/* Sparkle effects around chef */}
-          {phase === 'celebrate' && (
+          {displayPhase === 'celebrate' && (
             <>
               {Array.from({ length: 8 }).map((_, i) => {
                 const angle = (i * 45 * Math.PI) / 180
@@ -197,7 +201,7 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
           )}
 
           {/* Fire emoji burst from sides */}
-          {phase === 'celebrate' && (
+          {displayPhase === 'celebrate' && (
             <>
               {Array.from({ length: 5 }).map((_, i) => (
                 <motion.div

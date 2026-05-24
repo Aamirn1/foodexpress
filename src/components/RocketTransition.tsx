@@ -9,9 +9,13 @@ interface RocketTransitionProps {
 }
 
 export default function RocketTransition({ isActive, onComplete }: RocketTransitionProps) {
-  const [phase, setPhase] = useState<'idle' | 'appear' | 'launch' | 'zoom'>(
-    isActive ? 'appear' : 'idle'
-  )
+  // Phase progression: idle → launch → zoom → idle
+  // When first activated, we derive 'appear' from idle state
+  const [phase, setPhase] = useState<'idle' | 'launch' | 'zoom'>('idle')
+
+  // When isActive is true and phase is idle, display as 'appear' phase
+  const displayPhase: 'appear' | 'launch' | 'zoom' | 'idle' =
+    isActive && phase === 'idle' ? 'appear' : phase
 
   const stableOnComplete = useCallback(() => { onComplete() }, [onComplete])
 
@@ -47,33 +51,31 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           <motion.div
             className="absolute inset-0 bg-black"
             initial={{ opacity: 0 }}
-            animate={{ opacity: phase === 'zoom' ? 0.95 : 0.7 }}
+            animate={{ opacity: displayPhase === 'zoom' ? 0.95 : 0.7 }}
             transition={{ duration: 0.8 }}
           />
 
           {/* Starfield background */}
-          {phase !== 'idle' && (
-            <div className="absolute inset-0">
-              {Array.from({ length: 20 }).map((_, i) => (
-                <motion.div
-                  key={`star-${i}`}
-                  className="absolute rounded-full bg-white"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    width: 2 + Math.random() * 3,
-                    height: 2 + Math.random() * 3,
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.8, 0.3, 0.8] }}
-                  transition={{ duration: 1.5, delay: Math.random() * 0.5, repeat: Infinity }}
-                />
-              ))}
-            </div>
-          )}
+          <div className="absolute inset-0">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <motion.div
+                key={`star-${i}`}
+                className="absolute rounded-full bg-white"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  width: 2 + Math.random() * 3,
+                  height: 2 + Math.random() * 3,
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.8, 0.3, 0.8] }}
+                transition={{ duration: 1.5, delay: Math.random() * 0.5, repeat: Infinity }}
+              />
+            ))}
+          </div>
 
           {/* Fire trail particles - continuous during appear and launch */}
-          {(phase === 'appear' || phase === 'launch') && (
+          {(displayPhase === 'appear' || displayPhase === 'launch') && (
             <div className="absolute bottom-0 left-0 right-0">
               {Array.from({ length: 18 }).map((_, i) => (
                 <motion.div
@@ -100,7 +102,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           )}
 
           {/* Smoke cloud at launch point */}
-          {phase === 'launch' && (
+          {displayPhase === 'launch' && (
             <div className="absolute bottom-0 left-0 right-0">
               {Array.from({ length: 8 }).map((_, i) => (
                 <motion.div
@@ -131,15 +133,15 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             style={{ left: '10%', bottom: '5%' }}
             initial={{ y: 100, x: 0, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
-              phase === 'appear'
+              displayPhase === 'appear'
                 ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -15 }
-                : phase === 'launch'
+                : displayPhase === 'launch'
                 ? { y: -350, x: 80, scale: 1.1, opacity: 1, rotate: -35 }
                 : { y: -1400, x: 300, scale: 1.3, opacity: 0, rotate: -50 }
             }
             transition={{
-              duration: phase === 'appear' ? 1.0 : phase === 'launch' ? 1.2 : 1.0,
-              ease: phase === 'appear' ? [0.34, 1.56, 0.64, 1] : phase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
+              duration: displayPhase === 'appear' ? 1.0 : displayPhase === 'launch' ? 1.2 : 1.0,
+              ease: displayPhase === 'appear' ? [0.34, 1.56, 0.64, 1] : displayPhase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
             }}
           >
             <img
@@ -151,7 +153,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           </motion.div>
 
           {/* Screen flash effect */}
-          {phase === 'zoom' && (
+          {displayPhase === 'zoom' && (
             <motion.div
               className="absolute inset-0 bg-fire-gradient"
               initial={{ opacity: 0 }}
@@ -164,7 +166,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           <motion.div
             className="absolute inset-0 flex items-center justify-center"
             initial={{ opacity: 0 }}
-            animate={{ opacity: phase === 'appear' || phase === 'launch' ? 1 : 0 }}
+            animate={{ opacity: displayPhase === 'appear' || displayPhase === 'launch' ? 1 : 0 }}
             transition={{ duration: 0.5 }}
           >
             <motion.h2
@@ -184,7 +186,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           <motion.div
             className="absolute top-[20%] left-1/2 -translate-x-1/2"
             initial={{ opacity: 0 }}
-            animate={{ opacity: phase === 'appear' ? 1 : 0 }}
+            animate={{ opacity: displayPhase === 'appear' ? 1 : 0 }}
             transition={{ duration: 0.3 }}
           >
             <motion.span
@@ -196,7 +198,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
                 filter: 'drop-shadow(0 0 20px rgba(255, 100, 0, 0.6))',
               }}
             >
-              {phase === 'appear' ? '🔥' : ''}
+              {displayPhase === 'appear' ? '🔥' : ''}
             </motion.span>
           </motion.div>
         </motion.div>
