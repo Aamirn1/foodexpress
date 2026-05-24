@@ -9,11 +9,8 @@ interface RocketTransitionProps {
 }
 
 export default function RocketTransition({ isActive, onComplete }: RocketTransitionProps) {
-  // Phase progression: idle → launch → arrive → idle
-  // When first activated, we derive 'appear' from idle state
   const [phase, setPhase] = useState<'idle' | 'launch' | 'arrive'>('idle')
 
-  // When isActive is true and phase is idle, display as 'appear' phase
   const displayPhase: 'appear' | 'launch' | 'arrive' | 'idle' =
     isActive && phase === 'idle' ? 'appear' : phase
 
@@ -22,11 +19,8 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
   useEffect(() => {
     if (!isActive) return
 
-    // Phase 2: Rocket launches toward burger icon (after 1s visible)
     const launchTimer = setTimeout(() => setPhase('launch'), 1000)
-    // Phase 3: Rocket arrives at burger icon with flash (after 2.2s)
     const arriveTimer = setTimeout(() => setPhase('arrive'), 2200)
-    // Complete after animation (3s total)
     const completeTimer = setTimeout(() => {
       setPhase('idle')
       stableOnComplete()
@@ -47,7 +41,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {/* Dark overlay that fades in */}
+          {/* Dark overlay */}
           <motion.div
             className="absolute inset-0 bg-black"
             initial={{ opacity: 0 }}
@@ -55,7 +49,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             transition={{ duration: 0.8 }}
           />
 
-          {/* Starfield background */}
+          {/* Starfield */}
           <div className="absolute inset-0">
             {Array.from({ length: 20 }).map((_, i) => (
               <motion.div
@@ -74,7 +68,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             ))}
           </div>
 
-          {/* Fire trail particles - continuous during appear and launch */}
+          {/* Fire trail particles */}
           {(displayPhase === 'appear' || displayPhase === 'launch') && (
             <div className="absolute bottom-0 left-0 right-0">
               {Array.from({ length: 18 }).map((_, i) => (
@@ -101,7 +95,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Smoke cloud at launch point */}
+          {/* Smoke cloud */}
           {displayPhase === 'launch' && (
             <div className="absolute bottom-0 left-0 right-0">
               {Array.from({ length: 8 }).map((_, i) => (
@@ -127,17 +121,17 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket - tip points toward burger icon (top-left corner), travels there */}
+          {/* Rocket - tip pointing top-right (45° clockwise), moves top-right */}
           <motion.div
             className="absolute"
-            style={{ left: '30%', bottom: '12%' }}
-            initial={{ y: 100, x: 50, scale: 0.6, opacity: 0, rotate: 0 }}
+            style={{ left: '15%', bottom: '8%' }}
+            initial={{ y: 100, x: -50, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
                 ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: 45 }
                 : displayPhase === 'launch'
-                ? { y: -600, x: -250, scale: 0.9, opacity: 1, rotate: 45 }
-                : { y: -750, x: -350, scale: 0.5, opacity: 0, rotate: 45 }
+                ? { y: -550, x: 350, scale: 1.1, opacity: 1, rotate: 45 }
+                : { y: -750, x: 500, scale: 0.5, opacity: 0, rotate: 45 }
             }
             transition={{
               duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 1.2 : 0.5,
@@ -147,15 +141,15 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             <img
               src="/images/rocket-animation.png"
               alt="Rocket"
-              className="w-32 h-32 sm:w-48 sm:h-48"
+              className="w-24 h-auto sm:w-36 sm:h-auto object-contain"
               style={{ filter: 'drop-shadow(0 0 25px rgba(255, 100, 0, 0.7)) drop-shadow(0 0 50px rgba(255, 50, 0, 0.4))' }}
             />
           </motion.div>
 
-          {/* Flash/impact effect at burger icon when rocket arrives */}
+          {/* Flash at top-right where rocket arrives */}
           {displayPhase === 'arrive' && (
             <motion.div
-              className="absolute top-[2%] left-[3%] w-16 h-16 sm:w-20 sm:h-20 rounded-full"
+              className="absolute top-[2%] right-[5%] w-16 h-16 sm:w-20 sm:h-20 rounded-full"
               style={{
                 background: 'radial-gradient(circle, rgba(255,150,0,0.8) 0%, rgba(255,80,0,0.4) 40%, transparent 70%)',
               }}
@@ -165,7 +159,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             />
           )}
 
-          {/* Screen flash effect on arrival */}
+          {/* Screen flash on arrival */}
           {displayPhase === 'arrive' && (
             <motion.div
               className="absolute inset-0 bg-fire-gradient"
@@ -195,7 +189,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </motion.h2>
           </motion.div>
 
-          {/* Countdown fire emoji during appear phase */}
+          {/* Fire emoji during appear */}
           <motion.div
             className="absolute top-[20%] left-1/2 -translate-x-1/2"
             initial={{ opacity: 0 }}
