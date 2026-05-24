@@ -134,10 +134,10 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             initial={{ y: 100, x: 50, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
-                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -55 }
+                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: 45 }
                 : displayPhase === 'launch'
-                ? { y: -600, x: -250, scale: 0.9, opacity: 1, rotate: -55 }
-                : { y: -750, x: -350, scale: 0.5, opacity: 0, rotate: -55 }
+                ? { y: -600, x: -250, scale: 0.9, opacity: 1, rotate: 45 }
+                : { y: -750, x: -350, scale: 0.5, opacity: 0, rotate: 45 }
             }
             transition={{
               duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 1.2 : 0.5,

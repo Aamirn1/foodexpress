@@ -112,7 +112,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#0A0A0A" />
       </head>
       <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground font-sans`}
+        className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground font-sans overflow-x-hidden`}
       >
         <ClientLayout>{children}</ClientLayout>
       </body>
