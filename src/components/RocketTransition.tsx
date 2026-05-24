@@ -127,17 +127,17 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket - rotated to point top-right, moves toward top-right */}
+          {/* Rocket - tip points toward burger icon (top-left), moves toward it */}
           <motion.div
             className="absolute"
-            style={{ left: '15%', bottom: '10%' }}
-            initial={{ y: 100, x: -50, scale: 0.6, opacity: 0, rotate: 0 }}
+            style={{ left: '25%', bottom: '10%' }}
+            initial={{ y: 100, x: 50, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
-                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: 45 }
+                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -30 }
                 : displayPhase === 'launch'
-                ? { y: -500, x: 400, scale: 1.1, opacity: 1, rotate: 45 }
-                : { y: -1400, x: 900, scale: 1.3, opacity: 0, rotate: 50 }
+                ? { y: -500, x: -150, scale: 1.1, opacity: 1, rotate: -30 }
+                : { y: -700, x: -200, scale: 1.2, opacity: 0, rotate: -35 }
             }
             transition={{
               duration: displayPhase === 'appear' ? 1.0 : displayPhase === 'launch' ? 1.0 : 0.8,
