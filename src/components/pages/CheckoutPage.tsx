@@ -32,7 +32,6 @@ import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
 import { useCart } from '@/hooks/use-cart'
 import { useToast } from '@/hooks/use-toast'
-import RocketTransition from '@/components/RocketTransition'
 import ChefTransition from '@/components/ChefTransition'
 
 interface CheckoutPageProps {
@@ -53,7 +52,6 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlacing, setIsPlacing] = useState(false)
   const [orderPlaced, setOrderPlaced] = useState(false)
-  const [showRocket, setShowRocket] = useState(false)
   const [showChef, setShowChef] = useState(false)
   const [transactionId, setTransactionId] = useState('')
   const [copiedOrderId, setCopiedOrderId] = useState(false)
@@ -136,11 +134,6 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
     setTimeout(() => setCopiedOrderId(false), 2000)
   }
 
-  // Rocket transition complete → show checkout
-  const onRocketComplete = useCallback(() => {
-    setShowRocket(false)
-  }, [])
-
   if (items.length === 0 && !orderPlaced) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -170,7 +163,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   // Order confirmed page
   if (orderPlaced) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10">
         <motion.div
           className="text-center max-w-md w-full"
           initial={{ opacity: 0, scale: 0.9 }}
@@ -275,7 +268,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
                 <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-4 h-4 text-primary" />
                 </div>
-                <div>
+                <div className="min-w-0 overflow-hidden">
                   <span className="text-xs text-muted-foreground block">Delivery To</span>
                   <span className="text-foreground font-semibold text-sm truncate block">{formData.address}, {formData.city}</span>
                 </div>
@@ -343,9 +336,6 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Rocket Transition */}
-      <RocketTransition isActive={showRocket} onComplete={onRocketComplete} />
-
       {/* Chef Transition */}
       <ChefTransition isActive={showChef} onComplete={onChefComplete} />
 
