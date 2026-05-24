@@ -22,15 +22,15 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
   useEffect(() => {
     if (!isActive) return
 
-    // Phase 2: Rocket launches upward (after 1.5s visible at bottom)
-    const launchTimer = setTimeout(() => setPhase('launch'), 1500)
-    // Phase 3: Rocket zooms off screen + flash (after 2.5s)
-    const zoomTimer = setTimeout(() => setPhase('zoom'), 2500)
-    // Complete after full 3.5 second animation
+    // Phase 2: Rocket launches toward top-right (after 1s visible)
+    const launchTimer = setTimeout(() => setPhase('launch'), 1000)
+    // Phase 3: Rocket zooms off screen + flash (after 1.8s)
+    const zoomTimer = setTimeout(() => setPhase('zoom'), 1800)
+    // Complete after full 2.8 second animation
     const completeTimer = setTimeout(() => {
       setPhase('idle')
       stableOnComplete()
-    }, 3500)
+    }, 2800)
     return () => {
       clearTimeout(launchTimer)
       clearTimeout(zoomTimer)
@@ -52,7 +52,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             className="absolute inset-0 bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: displayPhase === 'zoom' ? 0.95 : 0.7 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           />
 
           {/* Starfield background */}
@@ -82,8 +82,8 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
                   key={i}
                   className="absolute rounded-full"
                   style={{
-                    left: `${10 + Math.random() * 15}%`,
-                    bottom: `${5 + Math.random() * 8}%`,
+                    left: `${8 + Math.random() * 12}%`,
+                    bottom: `${3 + Math.random() * 8}%`,
                     width: 6 + Math.random() * 14,
                     height: 6 + Math.random() * 14,
                     background: `hsl(${Math.random() * 40 + 15}, 100%, ${50 + Math.random() * 30}%)`,
@@ -109,7 +109,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
                   key={`smoke-${i}`}
                   className="absolute rounded-full"
                   style={{
-                    left: `${5 + Math.random() * 25}%`,
+                    left: `${5 + Math.random() * 20}%`,
                     bottom: '2%',
                   }}
                   initial={{ opacity: 0.6, scale: 0.5, width: 30, height: 30 }}
@@ -119,7 +119,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
                     x: (Math.random() - 0.5) * 120,
                     y: -(20 + Math.random() * 60),
                   }}
-                  transition={{ duration: 1.5, delay: Math.random() * 0.3 }}
+                  transition={{ duration: 1.0, delay: Math.random() * 0.2 }}
                 >
                   <div className="w-full h-full rounded-full bg-gray-400/40" />
                 </motion.div>
@@ -127,20 +127,20 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket - visible for 3 seconds total */}
+          {/* Rocket - pointing top-right, moving toward cart icon area */}
           <motion.div
             className="absolute"
-            style={{ left: '15%', bottom: '10%' }}
-            initial={{ y: 100, x: 0, scale: 0.6, opacity: 0, rotate: 0 }}
+            style={{ left: '12%', bottom: '8%' }}
+            initial={{ y: 100, x: -50, scale: 0.6, opacity: 0, rotate: 0 }}
             animate={
               displayPhase === 'appear'
-                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -15 }
+                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: 45 }
                 : displayPhase === 'launch'
-                ? { y: -350, x: 80, scale: 1.1, opacity: 1, rotate: -35 }
-                : { y: -1400, x: 300, scale: 1.3, opacity: 0, rotate: -50 }
+                ? { y: -500, x: 350, scale: 1.1, opacity: 1, rotate: 45 }
+                : { y: -1400, x: 900, scale: 1.4, opacity: 0, rotate: 50 }
             }
             transition={{
-              duration: displayPhase === 'appear' ? 1.0 : displayPhase === 'launch' ? 1.0 : 0.8,
+              duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 0.7 : 0.6,
               ease: displayPhase === 'appear' ? [0.34, 1.56, 0.64, 1] : displayPhase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
             }}
           >
@@ -158,7 +158,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
               className="absolute inset-0 bg-fire-gradient"
               initial={{ opacity: 0 }}
               animate={{ opacity: [0, 0.9, 0] }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
             />
           )}
 
@@ -167,13 +167,13 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             className="absolute inset-0 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: displayPhase === 'appear' || displayPhase === 'launch' ? 1 : 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.4 }}
           >
             <motion.h2
               className="text-3xl sm:text-6xl font-serif font-black text-white"
               initial={{ y: 30, scale: 0.8 }}
               animate={{ y: 0, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
               style={{
                 textShadow: '0 0 30px rgba(255, 100, 0, 0.8), 0 0 60px rgba(255, 50, 0, 0.4), 0 4px 20px rgba(0,0,0,0.5)',
               }}
@@ -193,7 +193,7 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
               className="text-6xl sm:text-8xl font-black"
               initial={{ scale: 2, opacity: 0 }}
               animate={{ scale: 0.8, opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.5, times: [0, 0.2, 0.7, 1] }}
+              transition={{ duration: 1.0, times: [0, 0.2, 0.7, 1] }}
               style={{
                 filter: 'drop-shadow(0 0 20px rgba(255, 100, 0, 0.6))',
               }}
