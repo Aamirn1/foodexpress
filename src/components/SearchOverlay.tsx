@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X } from 'lucide-react'
 import { searchMenuItems, type MenuItem } from '@/data/menu'
@@ -12,9 +13,10 @@ interface SearchOverlayProps {
 
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState('')
+  const [canPortal, setCanPortal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  // Compute results from query using useMemo instead of useEffect+setState
+  // Compute results from query
   const results: MenuItem[] = useMemo(() => {
     if (query.trim().length > 0) {
       return searchMenuItems(query)
@@ -28,10 +30,10 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     onClose()
   }, [onClose])
 
-  // Navigate to a URL — uses window.location for reliability
-  // (router.push can fail if component unmounts during AnimatePresence exit)
-  const navigateTo = useCallback((url: string) => {
-    window.location.href = url
+  // Enable portal after mount
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setCanPortal(true))
+    return () => cancelAnimationFrame(id)
   }, [])
 
   // Focus input when overlay opens
@@ -42,9 +44,9 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     }
   }, [isOpen])
 
+  // Escape key handler
   useEffect(() => {
     if (!isOpen) return
-
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') handleClose()
     }
@@ -52,7 +54,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, handleClose])
 
-  return (
+  const overlay = (
     <AnimatePresence>
       {isOpen && (
         <>
@@ -62,7 +64,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md"
+            style={{ zIndex: 9990 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-md"
             onClick={handleClose}
           />
 
@@ -72,7 +75,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: '-100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-            className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border shadow-2xl shadow-black/40"
+            style={{ zIndex: 9991 }}
+            className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border shadow-2xl shadow-black/40"
           >
             <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
               {/* Search Input */}
@@ -120,35 +124,35 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigateTo('/menu')
-                        }}
-                        className="flex items-center gap-4 p-3 rounded-xl bg-card/60 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-200 group cursor-pointer"
                       >
-                        {/* Item Image */}
-                        <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-secondary">
-                          <img
-                            src={item.images[0]}
-                            alt={item.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                          />
-                        </div>
+                        <a
+                          href="/menu"
+                          className="flex items-center gap-4 p-3 rounded-xl bg-card/60 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-200 group cursor-pointer"
+                        >
+                          {/* Item Image */}
+                          <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-secondary">
+                            <img
+                              src={item.images[0]}
+                              alt={item.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                            />
+                          </div>
 
-                        {/* Item Info */}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-                            {item.name}
-                          </h3>
-                          <p className="text-xs text-muted-foreground mt-0.5">
-                            {item.category}
-                          </p>
-                        </div>
+                          {/* Item Info */}
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                              {item.name}
+                            </h3>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              {item.category}
+                            </p>
+                          </div>
 
-                        {/* Price */}
-                        <span className="text-sm font-bold text-primary flex-shrink-0">
-                          {item.priceFormatted}
-                        </span>
+                          {/* Price */}
+                          <span className="text-sm font-bold text-primary flex-shrink-0">
+                            {item.priceFormatted}
+                          </span>
+                        </a>
                       </motion.div>
                     ))}
                   </div>
@@ -160,4 +164,8 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
       )}
     </AnimatePresence>
   )
+
+  // Render via portal to document.body so it's always on top
+  if (!canPortal) return null
+  return createPortal(overlay, document.body)
 }
