@@ -10,11 +10,20 @@ interface RocketTransitionProps {
 
 export default function RocketTransition({ isActive, onComplete }: RocketTransitionProps) {
   const [phase, setPhase] = useState<'idle' | 'launch' | 'arrive'>('idle')
+  const [isDesktop, setIsDesktop] = useState(false)
 
   const displayPhase: 'appear' | 'launch' | 'arrive' | 'idle' =
     isActive && phase === 'idle' ? 'appear' : phase
 
   const stableOnComplete = useCallback(() => { onComplete() }, [onComplete])
+
+  // Detect desktop viewport
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768)
+    checkDesktop()
+    window.addEventListener('resize', checkDesktop)
+    return () => window.removeEventListener('resize', checkDesktop)
+  }, [])
 
   useEffect(() => {
     if (!isActive) return
@@ -31,6 +40,34 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
       clearTimeout(completeTimer)
     }
   }, [isActive, stableOnComplete])
+
+  // Desktop: continuous smooth keyframes starting from off-screen bottom
+  const desktopRocketAnimate = {
+    y: [800, 0, -700],
+    x: [-50, 0, 400],
+    scale: [0.5, 1, 0.4],
+    opacity: [0, 1, 0],
+    rotate: [-30, -30, -30],
+  }
+
+  const desktopRocketTransition = {
+    duration: 3,
+    times: [0, 0.35, 1],
+    ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+  }
+
+  // Mobile: phased animation (current behavior)
+  const mobileRocketAnimate =
+    displayPhase === 'appear'
+      ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -30 }
+      : displayPhase === 'launch'
+      ? { y: -550, x: 350, scale: 1.1, opacity: 1, rotate: -30 }
+      : { y: -750, x: 500, scale: 0.5, opacity: 0, rotate: -30 }
+
+  const mobileRocketTransition = {
+    duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 1.2 : 0.5,
+    ease: displayPhase === 'appear' ? [0.34, 1.56, 0.64, 1] : displayPhase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
+  }
 
   return (
     <AnimatePresence>
@@ -121,22 +158,16 @@ export default function RocketTransition({ isActive, onComplete }: RocketTransit
             </div>
           )}
 
-          {/* Rocket - tip rotated 30° anticlockwise, moves top-right */}
+          {/* Rocket */}
           <motion.div
             className="absolute"
             style={{ left: '15%', bottom: '8%' }}
-            initial={{ y: 100, x: -50, scale: 0.6, opacity: 0, rotate: 0 }}
-            animate={
-              displayPhase === 'appear'
-                ? { y: 0, x: 0, scale: 1, opacity: 1, rotate: -30 }
-                : displayPhase === 'launch'
-                ? { y: -550, x: 350, scale: 1.1, opacity: 1, rotate: -30 }
-                : { y: -750, x: 500, scale: 0.5, opacity: 0, rotate: -30 }
+            initial={isDesktop
+              ? { y: 800, x: -50, scale: 0.5, opacity: 0, rotate: -30 }
+              : { y: 100, x: -50, scale: 0.6, opacity: 0, rotate: 0 }
             }
-            transition={{
-              duration: displayPhase === 'appear' ? 0.8 : displayPhase === 'launch' ? 1.2 : 0.5,
-              ease: displayPhase === 'appear' ? [0.34, 1.56, 0.64, 1] : displayPhase === 'launch' ? 'easeIn' : [0.25, 0.46, 0.45, 0.94],
-            }}
+            animate={isDesktop ? desktopRocketAnimate : mobileRocketAnimate}
+            transition={isDesktop ? desktopRocketTransition : mobileRocketTransition}
           >
             <img
               src="/images/rocket-animation.png"
