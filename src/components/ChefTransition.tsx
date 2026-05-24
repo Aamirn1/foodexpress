@@ -9,28 +9,28 @@ interface ChefTransitionProps {
 }
 
 export default function ChefTransition({ isActive, onComplete }: ChefTransitionProps) {
-  const [phase, setPhase] = useState<'idle' | 'entrance' | 'celebrate' | 'fade'>('idle')
+  const [phase, setPhase] = useState<'idle' | 'entrance' | 'celebrate' | 'fade'>(
+    isActive ? 'entrance' : 'idle'
+  )
 
-  const stableOnComplete = useCallback(onComplete, [onComplete])
+  const stableOnComplete = useCallback(() => { onComplete() }, [onComplete])
 
   useEffect(() => {
-    if (isActive) {
-      // Phase 1: Chef slides in from bottom (0-1.2s)
-      setPhase('entrance')
-      // Phase 2: Celebration with confetti & sparkles (1.2-3.5s)
-      const celebrateTimer = setTimeout(() => setPhase('celebrate'), 1200)
-      // Phase 3: Fade out (3.5-4.2s)
-      const fadeTimer = setTimeout(() => setPhase('fade'), 3500)
-      // Complete after full animation (4.5s total)
-      const completeTimer = setTimeout(() => {
-        setPhase('idle')
-        stableOnComplete()
-      }, 4500)
-      return () => {
-        clearTimeout(celebrateTimer)
-        clearTimeout(fadeTimer)
-        clearTimeout(completeTimer)
-      }
+    if (!isActive) return
+
+    // Phase 2: Celebration with confetti & sparkles (1.2-3.5s)
+    const celebrateTimer = setTimeout(() => setPhase('celebrate'), 1200)
+    // Phase 3: Fade out (3.5-4.2s)
+    const fadeTimer = setTimeout(() => setPhase('fade'), 3500)
+    // Complete after full animation (4.5s total)
+    const completeTimer = setTimeout(() => {
+      setPhase('idle')
+      stableOnComplete()
+    }, 4500)
+    return () => {
+      clearTimeout(celebrateTimer)
+      clearTimeout(fadeTimer)
+      clearTimeout(completeTimer)
     }
   }, [isActive, stableOnComplete])
 
