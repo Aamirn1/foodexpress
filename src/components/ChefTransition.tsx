@@ -97,13 +97,13 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
 
           {/* Chef character */}
           <motion.div
-            className="relative z-10"
-            initial={{ y: 400, scale: 0.3, opacity: 0, rotate: 15 }}
+            className="relative z-10 flex flex-col items-center"
+            initial={{ y: 400, scale: 0.3, opacity: 0, rotate: 10 }}
             animate={
               phase === 'entrance'
                 ? { y: 0, scale: 1, opacity: 1, rotate: 0 }
                 : phase === 'celebrate'
-                ? { y: [0, -15, 0, -10, 0], scale: [1, 1.08, 1, 1.05, 1], opacity: 1, rotate: [0, -5, 5, -3, 0] }
+                ? { y: [0, -15, 0, -10, 0], scale: [1, 1.05, 1, 1.03, 1], opacity: 1, rotate: [0, -3, 3, -2, 0] }
                 : { y: -80, scale: 0.8, opacity: 0 }
             }
             transition={{
@@ -115,44 +115,44 @@ export default function ChefTransition({ isActive, onComplete }: ChefTransitionP
               <img
                 src="/images/chef-animation.png"
                 alt="Chef"
-                className="w-44 h-44 sm:w-56 sm:h-56 object-contain relative z-10"
+                className="w-32 h-auto sm:w-44 object-contain relative z-10"
                 style={{ filter: 'drop-shadow(0 0 30px rgba(255, 100, 0, 0.6)) drop-shadow(0 0 60px rgba(255, 50, 0, 0.3))' }}
               />
             </div>
-          </motion.div>
 
-          {/* "Order Booked!" text - appears during celebrate phase */}
-          <motion.div
-            className="absolute bottom-[22%] sm:bottom-[25%] left-0 right-0 text-center z-20"
-            initial={{ opacity: 0, y: 30 }}
-            animate={
-              phase === 'celebrate'
-                ? { opacity: 1, y: 0 }
-                : phase === 'fade'
-                ? { opacity: 0, y: -30 }
-                : { opacity: 0, y: 30 }
-            }
-            transition={{ duration: 0.5, delay: phase === 'celebrate' ? 0.3 : 0 }}
-          >
-            <motion.h2
-              className="text-3xl sm:text-6xl font-serif font-black text-white mb-2"
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', damping: 12, stiffness: 200, delay: 0.2 }}
-              style={{
-                textShadow: '0 0 30px rgba(255, 100, 0, 0.8), 0 0 60px rgba(255, 50, 0, 0.4), 0 4px 20px rgba(0,0,0,0.5)',
-              }}
+            {/* "Order Booked!" text - right below chef */}
+            <motion.div
+              className="text-center mt-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={
+                phase === 'celebrate'
+                  ? { opacity: 1, y: 0 }
+                  : phase === 'fade'
+                  ? { opacity: 0, y: -20 }
+                  : { opacity: 0, y: 20 }
+              }
+              transition={{ duration: 0.5, delay: phase === 'celebrate' ? 0.3 : 0 }}
             >
-              🔥 Order Booked!
-            </motion.h2>
-            <motion.p
-              className="text-orange-200 text-sm sm:text-lg font-medium"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              Your delicious meal is being prepared!
-            </motion.p>
+              <motion.h2
+                className="text-2xl sm:text-5xl font-serif font-black text-white mb-1"
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', damping: 12, stiffness: 200, delay: 0.2 }}
+                style={{
+                  textShadow: '0 0 30px rgba(255, 100, 0, 0.8), 0 0 60px rgba(255, 50, 0, 0.4), 0 4px 20px rgba(0,0,0,0.5)',
+                }}
+              >
+                🔥 Order Booked!
+              </motion.h2>
+              <motion.p
+                className="text-orange-200 text-xs sm:text-base font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                Your delicious meal is being prepared!
+              </motion.p>
+            </motion.div>
           </motion.div>
 
           {/* Ringing bell animation */}
