@@ -187,7 +187,7 @@ export default function CartDrawer({
                     shadow-lg shadow-primary/20 hover:shadow-primary/40
                     hover:opacity-90 transition-all duration-300 btn-fire-glow"
                 >
-                  Proceed to Checkout 🚀
+                  Proceed to Checkout
                 </button>
                 <button
                   onClick={onClose}
