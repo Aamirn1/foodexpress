@@ -163,7 +163,7 @@ export default function CheckoutPage({ onNavigate }: CheckoutPageProps) {
   // Order confirmed page
   if (orderPlaced) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4 pt-28 pb-10">
+      <div className="min-h-screen bg-background flex items-center justify-center px-4 py-10">
         <motion.div
           className="text-center max-w-md w-full"
           initial={{ opacity: 0, scale: 0.9 }}
