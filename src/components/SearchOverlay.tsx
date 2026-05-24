@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X } from 'lucide-react'
-import { useRouter } from 'next/navigation'
 import { searchMenuItems, type MenuItem } from '@/data/menu'
 
 interface SearchOverlayProps {
@@ -14,7 +13,6 @@ interface SearchOverlayProps {
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
-  const router = useRouter()
 
   // Compute results from query using useMemo instead of useEffect+setState
   const results: MenuItem[] = useMemo(() => {
@@ -29,6 +27,12 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
     setQuery('')
     onClose()
   }, [onClose])
+
+  // Navigate to a URL — uses window.location for reliability
+  // (router.push can fail if component unmounts during AnimatePresence exit)
+  const navigateTo = useCallback((url: string) => {
+    window.location.href = url
+  }, [])
 
   // Focus input when overlay opens
   useEffect(() => {
@@ -118,8 +122,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         transition={{ delay: index * 0.05 }}
                         onClick={(e) => {
                           e.stopPropagation()
-                          router.push('/menu')
-                          handleClose()
+                          navigateTo('/menu')
                         }}
                         className="flex items-center gap-4 p-3 rounded-xl bg-card/60 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-200 group cursor-pointer"
                       >
