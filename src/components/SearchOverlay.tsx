@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { searchMenuItems, type MenuItem } from '@/data/menu'
 
 interface SearchOverlayProps {
@@ -13,6 +14,7 @@ interface SearchOverlayProps {
 export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const router = useRouter()
 
   // Compute results from query using useMemo instead of useEffect+setState
   const results: MenuItem[] = useMemo(() => {
@@ -118,6 +120,7 @@ export default function SearchOverlay({ isOpen, onClose }: SearchOverlayProps) {
                         onClick={(e) => {
                           e.preventDefault()
                           handleClose()
+                          router.push('/menu')
                         }}
                         className="flex items-center gap-4 p-3 rounded-xl bg-card/60 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-200 group cursor-pointer"
                       >
